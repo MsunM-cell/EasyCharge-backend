@@ -71,7 +71,7 @@ def userLogin():
         return response, 200, {"Content-Type": "application/json"}
 
 @app.route('/admin/register', methods=['POST'])
-def userRegister():
+def adminRegister():
     adminname = request.json.get('adminname')
     password = request.json.get('password')
     telephone = request.json.get('telephone')
@@ -102,7 +102,7 @@ def userRegister():
 
 
 @app.route('/admin/login', methods=['POST'])
-def userLogin():
+def adminLogin():
     adminname = request.json.get('adminname')
     password = request.json.get('password')
     if(adminname == "" or password == ""):
