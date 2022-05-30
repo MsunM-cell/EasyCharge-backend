@@ -1,3 +1,6 @@
+import waitArea
+import database
+import Order
 import encryption
 from asyncio.windows_events import NULL
 from contextlib import nullcontext
@@ -9,6 +12,7 @@ from flask import Flask
 from flask import request
 
 app = Flask(__name__)
+wait=waitArea.waitingArea()
 
 @app.route('/users/register', methods=['POST'])
 def userRegister():
@@ -22,15 +26,20 @@ def userRegister():
             "msg": "用户名或密码为空"
         }
     else:
-        password = encryption.getMd5(password)
-        # todo 存数据库
-        # 获得用户id
-        id = -1
-        data = {
-            "code": 200,
-            "msg": "Success",
-            "id": id
-        }
+        if(database.getUserByName()!=0):
+            data = {
+                "code": -2,
+                "msg": "用户名已存在"
+            }
+        else:
+            password = encryption.getMd5(password)
+            id =database.getUsersNum()+1
+            database.insertUser(id,username,password,telephone,email)
+            data = {
+                "code": 200,
+                "msg": "Success",
+                "id": id
+            }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
@@ -45,12 +54,11 @@ def userLogin():
             "msg": "用户名或密码为空"
         }
     else:
-        myPass = "ccc"  # getPassword(username)
+        myPass = database.getUserPassByName(username)
         if(encryption.getMd5(password) == myPass):
             ecbObj = encryption.ECBCipher()
-            # getUserID()
-            # todo 使用id作为token内容
-            token = ecbObj.encrypted(username+str(int(time.time())+86400))
+            id=database.getUserByName(username)
+            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
             if(token == None):
                 data = {
                     "code": -2,
@@ -82,16 +90,15 @@ def adminRegister():
             "msg": "用户名或密码为空"
         }
     else:
-        if(1):#todo getAdminID  判断用户名是否存在
+        if(database.getAdminByName(adminname)!=0):
             data = {
                 "code": -2,
                 "msg": "用户名已存在"
             }
         else:
             password = encryption.getMd5(password)
-            # todo 存数据库
-            # 获得管理员id
-            id = -1
+            id =database.getAdminsNum()+1
+            database.insertAdmin(id,adminname,password,telephone,email)
             data = {
                 "code": 200,
                 "msg": "Success",
@@ -111,12 +118,11 @@ def adminLogin():
             "msg": "用户名或密码为空"
         }
     else:
-        myPass = "ccc"  # getAdminPassword(adminname)
+        myPass = database.getAdminPassByName(adminname)
         if(encryption.getMd5(password) == myPass):
             ecbObj = encryption.ECBCipher()
-            # getUserID()
-            # todo 使用id作为token内容
-            token = ecbObj.encrypted(adminname+str(int(time.time())+86400))
+            id=database.getAdminByName(adminname)
+            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
             if(token == None):
                 data = {
                     "code": -2,
@@ -135,6 +141,85 @@ def adminLogin():
             }
         response = json.dumps(data)
         return response, 200, {"Content-Type": "application/json"}
+
+
+
+@app.route('/users/setInfo', methods=['POST'])
+def userSetInfo():
+    token = request.json.get('token')
+    username = request.json.get('username')
+    password = request.json.get('password')
+    telephone = request.json.get('telephone')
+    email = request.json.get('email')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+           data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            database.updateUser(result['id'],username,password,telephone,email)
+            data = {
+                "code": 200,
+                "msg": "Success"
+            }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/users/requestCharge', methods=['POST'])
+def requestCharge():
+    token = request.json.get('token')
+    mode = request.json.get('mode')
+    capacity = request.json.get('capacity')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            } 
+        else:
+            if(wait.haveEmpty(mode)):
+                myorder = Order.order(0,mode,capacity)
+                if(wait.callin(myorder)):
+                    myorder.setId(database.getOrdersNum()+1)
+                    myorder.insert()
+                    data = {
+                        "code": 200,
+                        "msg": "Success",
+                        "order":{
+                            "id":myorder.id,
+                            "status":0,
+                            "create_time":myorder.creatTime,
+                            "mode":mode,
+                            "capacity":capacity
+                        },
+                        "queuepos":wait.getQuepos(myorder.id,mode)
+                    }
+                else:
+                    data = {
+                    "code": -3,
+                    "msg": "等待区已满，请稍后再试"
+                }
+            else:
+                data = {
+                    "code": -3,
+                    "msg": "等待区已满，请稍后再试"
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
 
     
 if __name__ == '__main__':
