@@ -2,6 +2,8 @@ from Crypto.Cipher import AES
 from base64 import b64decode
 from base64 import b64encode
 import hashlib
+
+
 class ECBCipher(object):
     def __init__(self):
         self.key = "27rf7add6j7523ckb9a17m6rt7q69x80"
@@ -39,6 +41,7 @@ def tokenDecode(token):
             "time": int(token[-10:])
         }
         return result
+
 
 def getMd5(text):
     hl = hashlib.md5()
