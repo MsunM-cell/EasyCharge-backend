@@ -66,10 +66,6 @@ def getOrderDetailNum():
     id = 1
 
 
-def insertOrderDetail(id, creatTime, mode, capacity):
-    id = 1
-
-
 def updateOrderDetail(id, creatTime, mode, capacity):
     id = 1
 
@@ -107,3 +103,43 @@ def getOrderById(orderId):
     # 包含一下五个属性
     # id, status, mode, capacity, createTime
     # 失败返回None
+
+def getordersByUser(userid):
+    id=1
+    # 返回用户userid的所有order 返回一个list list中每个元素是一个字典 存储order的信息
+
+def getPointReport(start,end,id):
+    #id为空 表示所有充电桩 否则只选该id充电桩
+    #返回选中充电桩时间范围内每一天的的总充电量
+    #日期、充电桩编号、累计充电次数、累计充电时长、累计充电量、累计充电费用、累计服务费用、累计总费用
+    # 返回格式示例
+    # [
+    #     {
+    #         "date": "1974-04-07",
+    #         "pointID": 99,
+    #         "chargeTotalCnt": 5,
+    #         "chargeTotalTime": 1457190363720,
+    #         "chargeTotalElec": 70,
+    #         "chargeTotalCcost": 50,
+    #         "chargeTotalScost": 7,
+    #         "chargeTotalcost": 12
+    #     },
+    #     {
+    #         "date": "1974-04-08",
+    #         "pointID": 99,
+    #         "chargeTotalCnt": 5,
+    #         "chargeTotalTime": 1457190363720,
+    #         "chargeTotalElec": 70,
+    #         "chargeTotalCcost": 50,
+    #         "chargeTotalScost": 7,
+    #         "chargeTotalcost": 12
+    #     },
+    #     {
+
+    #     }
+
+    # ]
+    id=1
+
+
+
