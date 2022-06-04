@@ -39,13 +39,13 @@ class waitingArea(object):
     def callout(self, mode):
         if(mode == 0):
             # 快充
-            if(self.fastQue.empty()):
+            if(self.fastQue.isEmpty()):
                 return None
             else:
                 return self.fastQue.pop()
         else:
             # 慢充
-            if(self.tardyQue.empty()):
+            if(self.tardyQue.isEmpty()):
                 return None
             else:
                 return self.tardyQue.pop()
@@ -65,3 +65,32 @@ class waitingArea(object):
                 if(item.id == id):
                     return i
             return -1
+    
+    def setMode(self,id,mode):
+        if(mode==0):#请求修改为快充，当前为慢充
+            for item in self.tardyQue.array:
+                if(item.id == id):
+                    item.mode=0
+                    return True
+            return False
+        else:
+            for item in self.fastQue.array:
+                if(item.id == id):
+                    item.mode=1
+                    return True
+            return False
+
+    def setCapacity(self,id,capacity):
+        for item in self.fastQue.array:
+            if(item.id == id):
+                item.capacity=capacity
+                return True
+        for item in self.tardyQue.array:
+            if(item.id == id):
+                item.capacity=capacity
+                return True
+        return False
+        
+
+
+

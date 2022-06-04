@@ -5,24 +5,35 @@ import time
 
 
 class order(object):
-    def __init__(self, id, status, mode, capacity, createTime):
+    def __init__(self, id, userid, status, mode, capacity, createTime,totalCapacity=999999):
         self.id = id
+        self.userid = userid
         self.status = status
         self.mode = mode
         self.capacity = capacity
         self.createTime = createTime
+        self.totalCapacity=totalCapacity
 
     def setStatus(self, status):
         self.status = status
         self.update()
 
     def update(self):
-        database.updateOrder(self.id, self.createTime,
-                             self.mode, self.capacity)
+        database.updateOrder(self.id, self.userid, self.status, self.createTime,
+                             self.mode, self.capacity,self.totalCapacity)
 
     def insert(self):
-        database.insertOrder(self.id, self.createTime,
-                             self.mode, self.capacity)
+        database.insertOrder(self.id, self.userid, self.status, self.createTime,
+                             self.mode, self.capacity,self.totalCapacity)
+
+    def json(self):
+        return {
+            "id": self.id,
+            "status": self.status,
+            "createTime": self.createTime,
+            "mode": self.mode,
+            "capacity": self.capacity
+        }
 
 
 def createOrederDetail(orderid, chargeId, curCap, totaltime, startTime, endTime, capCost):
