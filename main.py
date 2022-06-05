@@ -177,7 +177,7 @@ def userSetInfo():
     return response, 200, {"Content-Type": "application/json"}
 
 
-@app.route('/users/requestCharge', methods=['POST'])
+@app.route('/order/requestCharge', methods=['POST'])
 def requestCharge():
     token = request.json.get('token')
     mode = request.json.get('mode')
@@ -198,20 +198,24 @@ def requestCharge():
         else:
             if(wait.haveEmpty(mode)):
                 myorder = Order.order(database.getOrdersNum(
-                )+1, 0, mode, capacity, time.strftime('%Y-%m-%d %H:%M:%S'),totalCapacity)
+                )+1,int(result['id']), 0, mode, capacity, time.strftime('%Y-%m-%d %H:%M:%S'),totalCapacity)
                 if(wait.callin(myorder)):
                     myorder.insert()
+                    if(myorder.mode==0):
+                        quepos="F"+str(wait.getQuepos(myorder.id, mode))
+                    else:
+                        quepos="T"+str(wait.getQuepos(myorder.id, mode))
                     data = {
                         "code": 200,
                         "msg": "Success",
                         "order": {
                             "id": myorder.id,
                             "status": 0,
-                            "create_time": myorder.creatTime,
+                            "create_time": myorder.createTime,
                             "mode": mode,
                             "capacity": capacity
                         },
-                        "queuepos": wait.getQuepos(myorder.id, mode)
+                        "queuepos": quepos
                     }
                 else:
                     data = {
@@ -709,6 +713,10 @@ def getPointChargeReport():
                 }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
+
+
+
+
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0',debug=True)  # 运行app

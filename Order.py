@@ -34,10 +34,10 @@ class order(object):
         }
 
 
-def createOrederDetail(orderid, chargeId, curCap, totaltime, startTime, endTime, capCost):
+def createOrederDetail(orderid, chargeId, curCap, totaltime, startTime, endTime, capCost,mode):
     id = database.getOrderDetailNum()+1
     creatTime = time.strftime('%Y-%m-%d %H:%M:%S')
     serveCost = 0.8*curCap
     cost = capCost+serveCost
     database.insertOrderDetail(id, orderid, creatTime, chargeId, curCap,
-                               totaltime, startTime, endTime, capCost, serveCost, cost)
+                               totaltime, startTime, endTime, capCost, serveCost, cost,mode)
