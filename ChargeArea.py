@@ -123,13 +123,13 @@ class chargeArea(object):
         return None
 
     def setChargeError(self,id):
-        for index,i in self.fastChargeList:
+        for index,i in enumerate(self.fastChargeList):
             if(i.id == id):
                 i.setUsable(False)
                 charge=self.fastChargeList.pop(index)
                 self.badfastChargeList.append(charge)
                 return True
-        for index,i in self.tardyChargeList:
+        for index,i in enumerate(self.tardyChargeList):
             if(i.id == id):
                 i.setUsable(False)
                 charge=self.tardyChargeList.pop(index)
@@ -138,13 +138,13 @@ class chargeArea(object):
         return False
 
     def setChargeOK(self,id):
-        for index,i in self.badfastChargeList:
+        for index,i in enumerate(self.badfastChargeList):
             if(i.id == id):
                 i.setUsable(True)
                 charge=self.badfastChargeList.pop(index)
                 self.fastChargeList.append(charge)
                 return True
-        for index,i in self.badtardyChargeList:
+        for index,i in enumerate(self.badtardyChargeList):
             if(i.id == id):
                 i.setUsable(True)
                 charge=self.badtardyChargeList.pop(index)
