@@ -59,7 +59,7 @@ class chargeArea(object):
         # 只考虑单一充电桩故障且正好该充电桩有车排队的情况
         if self.badfastChargeList:
             # 故障采用优先级调度
-            return self.badfastChargeList[0]
+            return self.badfastChargeList[0].getSecond()
 
         # 没有故障充电桩的情况
         # 设置时间代价列表 (time, id)
@@ -83,7 +83,7 @@ class chargeArea(object):
         # 只考虑单一充电桩故障且正好该充电桩有车排队的情况
         if self.badtardyChargeList:
             # 故障采用优先级调度
-            return self.badtardyChargeList[0]
+            return self.badtardyChargeList[0].getSecond()
 
         # 没有故障充电桩的情况
         # 设置时间代价列表 (time, id)
