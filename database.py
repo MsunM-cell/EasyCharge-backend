@@ -1,20 +1,23 @@
-from sqlalchemy import Column, String, create_engine,Date, DateTime, Integer
+from sqlalchemy import Column, String, create_engine, Date, DateTime, Integer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import mysql.connector
 from Order import order
 import time
 
-conn = mysql.connector.connect(user='EasyCharge', password='XKThZNNwdTW7CMyy', database='easycharge')
+conn = mysql.connector.connect(
+    user='EasyCharge', password='XKThZNNwdTW7CMyy', database='easycharge')
 cursor = conn.cursor(dictionary=True)
 
 
 # 创建对象的基类:
 Base = declarative_base()
 
-#sqlacodegen mysql+mysqlconnector://EasyCharge:XKThZNNwdTW7CMyy@localhost:3306/easycharge>models.py
+# sqlacodegen mysql+mysqlconnector://EasyCharge:XKThZNNwdTW7CMyy@localhost:3306/easycharge>models.py
 
 # 定义对象:
+
+
 class Admin(Base):
     __tablename__ = 'Admin'
 
@@ -86,18 +89,16 @@ class User(Base):
     email = Column(String(50))
 
 
-
 # 初始化数据库连接:
-engine = create_engine('mysql+mysqlconnector://EasyCharge:XKThZNNwdTW7CMyy@localhost:3306/easycharge')
+engine = create_engine(
+    'mysql+mysqlconnector://EasyCharge:XKThZNNwdTW7CMyy@localhost:3306/easycharge')
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 
 
-
-
 def getUsersNum():
     cursor.execute('SELECT MAX(id) FROM User')
-    values = cursor.fetchone()    
+    values = cursor.fetchone()
     # print(values)
     return values[0]
 
@@ -105,11 +106,11 @@ def getUsersNum():
 def insertUser(tmp_id, tmp_username, tmp_password, tmp_telephone, tmp_email):
     session = DBSession()
     user = User(
-        id = tmp_id,
-        username = tmp_username,
-        password = tmp_password,
-        telephone = tmp_telephone,
-        email = tmp_email
+        id=tmp_id,
+        username=tmp_username,
+        password=tmp_password,
+        telephone=tmp_telephone,
+        email=tmp_email
     )
     session.add(user)
     session.commit()
@@ -130,8 +131,8 @@ def updateUser(tmp_id, tmp_username, tmp_password, tmp_telephone, tmp_email):
     tmp.email = tmp_email
     session.commit()
     test = session.query(User).filter_by(id=tmp_id).first()
-    if (test.username != tmp_username or test.password != tmp_password or 
-    test.telephone != tmp_telephone or tmp.email != tmp_email):
+    if (test.username != tmp_username or test.password != tmp_password or
+            test.telephone != tmp_telephone or tmp.email != tmp_email):
         return -1
     return 0
 
@@ -141,7 +142,7 @@ def getUserByName(tmp_username):
     tmp = session.query(User).filter_by(username=tmp_username).first()
     if not tmp:
         return 0
-    return tmp.id    
+    return tmp.id
 
 
 def getAdminByName(tmp_Adminname):
@@ -155,11 +156,11 @@ def getAdminByName(tmp_Adminname):
 def insertAdmin(tmp_id, tmp_Adminname, tmp_password, tmp_telephone, tmp_email):
     session = DBSession()
     admin = Admin(
-        id = tmp_id,
-        adminname = tmp_Adminname,
-        password = tmp_password,
-        telephone = tmp_telephone,
-        email = tmp_email
+        id=tmp_id,
+        adminname=tmp_Adminname,
+        password=tmp_password,
+        telephone=tmp_telephone,
+        email=tmp_email
     )
     session.add(admin)
     session.commit()
@@ -167,12 +168,11 @@ def insertAdmin(tmp_id, tmp_Adminname, tmp_password, tmp_telephone, tmp_email):
     if not tmp:
         return -1
     return 0
-    
 
 
 def getAdminsNum():
     cursor.execute('SELECT MAX(id) FROM Admin')
-    values = cursor.fetchone()    
+    values = cursor.fetchone()
     # print(values)
     return values[0]
 
@@ -182,7 +182,7 @@ def getUserPassByName(tmp_username):
     tmp = session.query(User).filter_by(username=tmp_username).first()
     if not tmp:
         return None
-    return tmp.password 
+    return tmp.password
 
 
 def getAdminPassByName(tmp_adminname):
@@ -198,7 +198,7 @@ def getUserPassById(tmp_id):
     tmp = session.query(User).filter_by(id=tmp_id).first()
     if not tmp:
         return None
-    return tmp.password 
+    return tmp.password
 
 
 def getAdminPassById(adminid):
@@ -211,21 +211,21 @@ def getAdminPassById(adminid):
 
 def getOrdersNum():
     cursor.execute('SELECT MAX(id) FROM OrderList')
-    values = cursor.fetchone()    
+    values = cursor.fetchone()
     # print(values)
     return values[0]
 
 
-def insertOrder(tmp_id, tmp_userid, tmp_status, tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
+def insertOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
     session = DBSession()
     orderlist = OrderList(
-        id = tmp_id,
-        user_id = tmp_userid,
-        status = tmp_status,
-        create_time = tmp_creatTime,
-        mode = tmp_mode,
-        capacity = tmp_capacity,
-        totalCapacity = tmp_totalCapacity
+        id=tmp_id,
+        user_id=tmp_userid,
+        status=tmp_status,
+        create_time=tmp_creatTime,
+        mode=tmp_mode,
+        capacity=tmp_capacity,
+        totalCapacity=tmp_totalCapacity
     )
     session.add(orderlist)
     session.commit()
@@ -235,7 +235,7 @@ def insertOrder(tmp_id, tmp_userid, tmp_status, tmp_creatTime, tmp_mode, tmp_cap
     return 0
 
 
-def updateOrder(tmp_id, tmp_userid, tmp_status, tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
+def updateOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
     session = DBSession()
     tmp = session.query(OrderList).filter_by(id=tmp_id).first()
     if not tmp:
@@ -248,13 +248,15 @@ def updateOrder(tmp_id, tmp_userid, tmp_status, tmp_creatTime, tmp_mode, tmp_cap
     tmp.totalCapacity = tmp_totalCapacity
     session.commit()
     test = session.query(OrderList).filter_by(id=tmp_id).first()
-    if (test.user_id != tmp_userid or test.status != tmp_status or test.create_time != tmp_creatTime or 
-    test.mode != tmp_mode or test.capacity != tmp_capacity or test.totalCapacity != tmp_totalCapacity):
+    if (test.user_id != tmp_userid or test.status != tmp_status or test.create_time != tmp_creatTime or
+            test.mode != tmp_mode or test.capacity != tmp_capacity or test.totalCapacity != tmp_totalCapacity):
         return -1
     return 0
 
 # 将订单状态改为4
 # 表示已支付
+
+
 def setOrderEnd(tmp_id):
     session = DBSession()
     tmp = session.query(OrderList).filter_by(id=tmp_id).first()
@@ -270,7 +272,7 @@ def setOrderEnd(tmp_id):
 
 def getOrderDetailNum():
     cursor.execute('SELECT MAX(id) FROM ChargeInfo')
-    values = cursor.fetchone()    
+    values = cursor.fetchone()
     # print(values)
     return values[0]
 
@@ -284,27 +286,27 @@ def updateOrderDetail(tmp_id, tmp_creatTime, tmp_mode, tmp_capacity):
     tmp.mode = tmp_mode
     tmp.charge_capacity = tmp_capacity
     test = session.query(ChargeInfo).filter_by(id=tmp_id).first()
-    if (test.create_time  != tmp_creatTime or test.mode != tmp_mode or test.charge_capacity != tmp_capacity):
+    if (test.create_time != tmp_creatTime or test.mode != tmp_mode or test.charge_capacity != tmp_capacity):
         return -1
     return 0
 
 
-def insertOrderDetail(tmp_id, tmp_orderid, tmp_creatTime, tmp_chargeId, tmp_curCap, tmp_totaltime, 
-                        tmp_startTime, tmp_endTime, tmp_capCost, tmp_serveCost, tmp_cost, tmp_mode):
+def insertOrderDetail(tmp_id, tmp_orderid, tmp_creatTime, tmp_chargeId, tmp_curCap, tmp_totaltime,
+                      tmp_startTime, tmp_endTime, tmp_capCost, tmp_serveCost, tmp_cost, tmp_mode):
     session = DBSession()
     chargeinfo = ChargeInfo(
-        id = tmp_id,
-        order_id = tmp_orderid,
-        station_id = tmp_chargeId,
-        start_time = tmp_startTime,
-        stop_time = tmp_endTime,
-        charge_capacity = tmp_curCap,
-        cost = tmp_cost,
-        create_time = tmp_creatTime,
-        totaltime = tmp_totaltime,
-        capCost = tmp_capCost,
-        serveCost = tmp_serveCost,
-        mode = tmp_mode
+        id=tmp_id,
+        order_id=tmp_orderid,
+        station_id=tmp_chargeId,
+        start_time=tmp_startTime,
+        stop_time=tmp_endTime,
+        charge_capacity=tmp_curCap,
+        cost=tmp_cost,
+        create_time=tmp_creatTime,
+        totaltime=tmp_totaltime,
+        capCost=tmp_capCost,
+        serveCost=tmp_serveCost,
+        mode=tmp_mode
     )
     session.add(chargeinfo)
     session.commit()
@@ -326,6 +328,8 @@ def insertOrderDetail(tmp_id, tmp_orderid, tmp_creatTime, tmp_chargeId, tmp_curC
 #     "serveCost": 12,
 #     "cost": 37
 # }
+
+
 def getOrderDetailByOrder(tmp_orderid):
     session = DBSession()
     tmp = session.query(ChargeInfo).filter_by(ordier_id=tmp_orderid).first()
@@ -351,7 +355,8 @@ def getOrderDetailByOrder(tmp_orderid):
 # 传入一个用户id，返回该用户正在进行中的订单id
 def getOrderingByUser(userid):
     session = DBSession()
-    tmp = session.query(OrderList).filter(OrderList.user_id == userid, OrderList.mode != 4).first()
+    tmp = session.query(OrderList).filter(
+        OrderList.user_id == userid, OrderList.mode != 4).first()
     if not tmp:
         return None
     return tmp.id
@@ -366,7 +371,7 @@ def getOrderById(orderId):
     tmp = session.query(OrderList).filter_by(id=orderId).first()
     if not tmp:
         return None
-    result = order(tmp.id,tmp.status,tmp.mode,tmp.capacity,tmp.create_time)
+    result = order(tmp.id, tmp.status, tmp.mode, tmp.capacity, tmp.create_time)
     return result
 
 
@@ -382,7 +387,7 @@ def getordersByUser(userid):
             'id': row.id,
             'userid': row.user_id,
             'status': row.status,
-            'totalCapacity': row.totalCapacity ,
+            'totalCapacity': row.totalCapacity,
             'capacity': row.capacity,
             'creatTime': row.create_time,
             'mode': row.mode
@@ -391,9 +396,9 @@ def getordersByUser(userid):
     return listorder
 
 
-#id为空 表示所有充电桩 否则只选该id充电桩
-#返回选中充电桩时间范围内每一天的的总充电量
-#日期、充电桩编号、累计充电次数、累计充电时长、累计充电量、累计充电费用、累计服务费用、累计总费用
+# id为空 表示所有充电桩 否则只选该id充电桩
+# 返回选中充电桩时间范围内每一天的的总充电量
+# 日期、充电桩编号、累计充电次数、累计充电时长、累计充电量、累计充电费用、累计服务费用、累计总费用
 # 返回格式示例
 # [
 #     {
@@ -416,11 +421,11 @@ def getordersByUser(userid):
 #         "chargeTotalScost": 7,
 #         "chargeTotalcost": 12
 #     }
-# ]  
-def getPointReport(start,end,id):
-    startStruct = time.strptime(start,"%Y-%m-%d")
+# ]
+def getPointReport(start, end, id):
+    startStruct = time.strptime(start, "%Y-%m-%d")
     startStamp = time.mktime(startStruct)
-    endStruct = time.strptime(end,"%Y-%m-%d")
+    endStruct = time.strptime(end, "%Y-%m-%d")
     endStamp = time.mktime(endStruct)
     session = DBSession()
     tmp = session.query(ChargeInfo).all()
@@ -431,7 +436,7 @@ def getPointReport(start,end,id):
     listInfo = []
     for row in tmp:
         tmp_time = row.stop_time
-        tmp_struct = time.strptime(tmp_time,"%Y-%m-%d %H:%M:%S")
+        tmp_struct = time.strptime(tmp_time, "%Y-%m-%d %H:%M:%S")
         tmp_stamp = time.mktime(tmp_struct)
         if (tmp_stamp >= startStamp and tmp_stamp <= endStamp):
             tmp_date = time.strptime("%Y-%m-%d", tmp_struct)
@@ -447,10 +452,3 @@ def getPointReport(start,end,id):
             }
             listInfo.append(orderdict)
     return listInfo
-
-
-
-
-
-
-

@@ -86,7 +86,7 @@ class Charge():
         # 启动时间startTime、停止时间endTime、充电费用cost、服务费用0.8*curCap、
         # 总费用 ；
         Order.createOrederDetail(completeOrder.id, self.id, self.curCap,
-                                 self.time, self.startTime, self.endTime, self.cost)
+                                 self.time, self.startTime, self.endTime, self.cost,self.mode)
 
     def pushQue(self, order):
         self.que.push(order)
