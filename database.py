@@ -460,9 +460,9 @@ def getPointReport(start, end, id):
     endStruct = time.strptime(end, "%Y-%m-%d")
     endStamp = time.mktime(endStruct)
     session = DBSession()
-    tmp = session.query(ChargeInfo).group_by(ChargeInfo.station_id).all()
+    tmp = session.query(ChargeInfo).all()
     if (id != None):
-        tmp = session.query(ChargeInfo).filter_by(station_id=id).group_by(ChargeInfo.station_id).all()
+        tmp = session.query(ChargeInfo).filter_by(station_id=id).all()
     if not tmp:
         return None
     listInfo = []
@@ -472,15 +472,32 @@ def getPointReport(start, end, id):
         tmp_stamp = time.mktime(tmp_struct)
         if (tmp_stamp >= startStamp and tmp_stamp <= endStamp):
             tmp_date = time.strptime("%Y-%m-%d", tmp_struct)
-            orderdict = {
-                "date": tmp_date,
-                "pointID": row.station_id,
-                "chargeTotalCnt": 33,
-                "chargeTotalTime": 1457190363720,
-                "chargeTotalElec": 70,
-                "chargeTotalCcost": 50,
-                "chargeTotalScost": 7,
-                "chargeTotalcost": 12
-            }
-            listInfo.append(orderdict)
+            tmp_staid = row.station_id
+            appendflag = True
+            for tmpdict in listInfo:
+                if not tmpdict:
+                    break
+                if tmpdict['date'] == tmp_date and tmpdict['pointID'] == tmp_staid:
+                    appendflag = False
+                    tmpdict['chargeTotalCnt'] = tmpdict['chargeTotalCnt'] + 1
+                    tmpdict['chargeTotalTime'] = tmpdict['chargeTotalTime'] + row.totaltime
+                    tmpdict['chargeTotalElec'] = tmpdict['chargeTotalElec'] + row.charge_capacity
+                    tmpdict['chargeTotalCcost'] = tmpdict['chargeTotalCcost'] + row.capCost
+                    tmpdict['chargeTotalScost'] = tmpdict['chargeTotalScost'] + row.serveCost
+                    tmpdict['chargeTotalcost'] = tmpdict['chargeTotalcost'] + row.cost
+                    break
+
+
+            if appendflag:
+                orderdict = {
+                    "date": tmp_date,
+                    "pointID": row.station_id,
+                    "chargeTotalCnt": 1,
+                    "chargeTotalTime": row.totaltime,
+                    "chargeTotalElec": row.charge_capacity,
+                    "chargeTotalCcost": row.capCost,
+                    "chargeTotalScost": row.serveCost,
+                    "chargeTotalcost": row.cost
+                }
+                listInfo.append(orderdict)
     return listInfo

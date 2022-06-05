@@ -27,7 +27,6 @@ class waitingArea(object):
 
             if(not self.fastQue.isFull()):
                 self.fastQue.push(order)
-
                 return True
             else:
                 return False

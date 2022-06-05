@@ -343,6 +343,68 @@ def onChargePoint():
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
+@app.route('/admin/setPointError', methods=['POST'])
+def setPointError():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.setChargeError(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
+@app.route('/admin/setPointOK', methods=['POST'])
+def setPointOK():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.setChargeOK(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
 @app.route('/admin/closeChargePoint', methods=['POST'])
 def closeChargePoint():
     token = request.json.get('token')

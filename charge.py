@@ -113,8 +113,8 @@ class Charge():
                 self.price = 0.7
             time.sleep(60)
 
-    def setError(self):
-        self.usable = False
+    def setUsable(self,usable):
+        self.usable = usable
 
     def open(self):
         self.isOpen = True

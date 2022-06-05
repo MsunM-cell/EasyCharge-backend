@@ -18,13 +18,14 @@ class chargeArea(object):
         self.tardyChargeList.append(charge.Charge(1))
         self.tardyChargeList.append(charge.Charge(1))
         thread = threading.Thread(target=self.haveEmpty)
-        #thread.start()
+        thread.start()
 
     def haveEmpty(self):
         while(True):
             # 判断快充等候区有无订单
             fast_order = self.waitArea.callout(0)
             if fast_order != None:
+            
                 # 找到匹配充电桩
                 fast_charge = self.fastSchedule()
                 if fast_charge != None:
@@ -118,6 +119,36 @@ class chargeArea(object):
                 return i
         return None
 
+    def setChargeError(self,id):
+        for index,i in self.fastChargeList:
+            if(i.id == id):
+                i.setUsable(False)
+                charge=self.fastChargeList.pop(index)
+                self.badfastChargeList.append(charge)
+                return True
+        for index,i in self.tardyChargeList:
+            if(i.id == id):
+                i.setUsable(False)
+                charge=self.tardyChargeList.pop(index)
+                self.badtardyChargeList.append(charge)
+                return True
+        return False
+
+    def setChargeOK(self,id):
+        for index,i in self.badfastChargeList:
+            if(i.id == id):
+                i.setUsable(True)
+                charge=self.badfastChargeList.pop(index)
+                self.fastChargeList.append(charge)
+                return True
+        for index,i in self.badtardyChargeList:
+            if(i.id == id):
+                i.setUsable(True)
+                charge=self.badtardyChargeList.pop(index)
+                self.tardyChargeList.append(charge)
+                return True
+        return False
+        
     def openCharge(self, id):
         charge = self.getChargeById(id)
         if(charge != None):

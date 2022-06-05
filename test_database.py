@@ -24,7 +24,6 @@ engine = create_engine(
 # 创建DBSession类型:
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
 tmp = session.query(User).group_by(User.telephone).all()
 for i in tmp:
-    print(i)
+    print(i.id,i.username,i.telephone)
