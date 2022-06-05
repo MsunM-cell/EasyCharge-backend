@@ -527,6 +527,7 @@ def getChargePoint():
 @app.route('/admin/getChargePointCar', methods=['GET'])
 def getChargePointCar():
     token = request.json.get('token')
+    pointId = request.json.get('pointId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -540,7 +541,7 @@ def getChargePointCar():
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            result=charging.getWaitInfo()
+            result=charging.getWaitInfo(pointId)
             if(result!=None):
                 data = {
                     "code": 200,
@@ -626,7 +627,7 @@ def getPointChargeReport():
     token = request.json.get('token')
     start = request.json.get('start')
     end = request.json.get('end')
-    id = request.json.get('id')
+    id = request.json.get('pointId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {

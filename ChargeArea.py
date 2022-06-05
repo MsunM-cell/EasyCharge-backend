@@ -25,34 +25,34 @@ class chargeArea(object):
     def haveEmpty(self):
         while(True):
             # 判断快充充电桩队列是否存在空位
-            fast_have_empty = false
+            # fast_have_empty = false
             for i in self.fastChargeList:
                 if i.haveEmpty():
-                    fast_have_empty = true
-            if fast_have_empty:
+            #         fast_have_empty = true
+            # if fast_have_empty:
                 # 判断快充等候区有无订单
-                fast_order = self.waitArea.callout(0)
-                if fast_order != None:
-                    # 找到匹配充电桩
-                    fast_charge = self.fastSchedule()
-                    fast_charge.pushQue(fast_order)
-                    fast_order.setStatus(1)
+                    fast_order = self.waitArea.callout(0)
+                    if fast_order != None:
+                        # 找到匹配充电桩
+                        fast_charge = self.fastSchedule()
+                        fast_charge.pushQue(fast_order)
+                        fast_order.setStatus(1)
 
             # 判断慢充充电桩队列是否存在空位
-            slow_have_empty = false
+            # slow_have_empty = false
             for i in self.tardyChargeList:
                 if i.haveEmpty():
-                    slow_have_empty = true
-            if slow_have_empty:
+            #         slow_have_empty = true
+            # if slow_have_empty:
                 # 判断慢充充等候区有无订单
-                slow_order = self.waitArea.callout(1)
-                if slow_order != None:
-                    # 找到匹配充电桩
-                    slow_charge = self.slowSchedule()
-                    slow_charge.pushQue(slow_order)
-                    slow_order.setStatus(1)
+                    slow_order = self.waitArea.callout(1)
+                    if slow_order != None:
+                        # 找到匹配充电桩
+                        slow_charge = self.slowSchedule()
+                        slow_charge.pushQue(slow_order)
+                        slow_order.setStatus(1)
 
-            #time.sleep(1)
+            #time.sleep(10)
 
     def fastSchedule(self):
         # 首先判断有无故障充电桩
@@ -92,7 +92,7 @@ class chargeArea(object):
         for i in self.tardyChargeList:
             # 任意充电桩队列存在空位
             if (i.haveEmpty()):
-                if (i.queue.isEmpty()):
+                if (i.que.isEmpty()):
                     time_cost_list.append((0, i.id))
                 else:
                     time_cost = i.getFirst().capacity * 3600 / i.power - i.time
