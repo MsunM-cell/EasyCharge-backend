@@ -140,7 +140,7 @@ def getUserByName(tmp_username):
     session = DBSession()
     tmp = session.query(User).filter_by(username=tmp_username).first()
     if not tmp:
-        return None
+        return 0
     return tmp.id    
 
 
@@ -148,7 +148,7 @@ def getAdminByName(tmp_Adminname):
     session = DBSession()
     tmp = session.query(Admin).filter_by(adminname=tmp_Adminname).first()
     if not tmp:
-        return None
+        return 0
     return tmp.id
 
 

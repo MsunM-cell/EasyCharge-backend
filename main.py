@@ -3,14 +3,12 @@ import database
 import Order
 import encryption
 import ChargeArea
-from asyncio.windows_events import NULL
-from contextlib import nullcontext
-from distutils.log import debug
-from operator import methodcaller
 import json
 import time
 from flask import Flask
 from flask import request
+from gevent import pywsgi
+ 
 
 app = Flask(__name__)
 wait = waitArea.waitingArea()
@@ -712,7 +710,10 @@ def getPointChargeReport():
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0',debug=True)  # 运行app
+
+
 if __name__ == '__main__':
-    app.run(debug=True)  # 运行app
-
-
+    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
+    server.serve_forever()
