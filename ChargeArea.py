@@ -25,8 +25,9 @@ class chargeArea(object):
             # 调度策略函数
             for i in self.fastChargeList:
                 if(i.haveEmpty()):
-                    # 如果有充电桩坏了 调入坏了的充电桩的队列
-                    # 调入时修改order订单状态
+                    # 如果有充电桩坏了 调入坏了的充电桩的队列  
+                    # 充电桩的usable属性为False 即为坏了
+                    # 调入时修改order订单状态 order.setStatus()
                     # if(self.badfastChargeList.)
                     order=self.waitArea.callout(0)
                     if(order!=None):
