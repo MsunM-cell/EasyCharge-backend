@@ -238,7 +238,7 @@ class chargeArea(object):
         return List
 
     def getWaitInfo(self, pointid):
-        point = self.getChargeById(id)
+        point = self.getChargeById(pointid)
         order = point.getSecond()
         if(order != None):
             return {
