@@ -22,27 +22,81 @@ class chargeArea(object):
 
     def haveEmpty(self):
         while(True):
-            # 调度策略函数
-            for i in self.fastChargeList:
-                if(i.haveEmpty()):
-                    # 如果有充电桩坏了 调入坏了的充电桩的队列  
-                    # 充电桩的usable属性为False 即为坏了
-                    # 调入时修改order订单状态 order.setStatus()
-                    # if(self.badfastChargeList.)
-                    order=self.waitArea.callout(0)
-                    if(order!=None):
-                        i.pushQue(order)
+            # 判断快充等候区有无订单
+            fast_order = self.waitArea.callout(0)
+            if fast_order != None:
+                # 找到匹配充电桩
+                fast_charge = self.fastSchedule()
+                if fast_charge != None:
+                    fast_charge.pushQue(fast_order)
+                    fast_order.setStatus(1)
 
-# list中的项目是充电桩
-# time是已充电时长
-# requestTime 是请求的总时长
+            # 判断慢充等候区有无订单
+            slow_order = self.waitArea.callout(1)
+            if slow_order != None:
+                # 找到匹配充电桩
+                slow_charge = self.slowSchedule()
+                if slow_charge != None:
+                    slow_charge.pushQue(slow_order)
+                    slow_order.setStatus(1)
 
-            for i in self.tardyChargeList:
-                if(i.haveEmpty()):
-                    order=self.waitArea.callout(1)
-                    if(order!=None):
-                        i.pushQue(order)
             time.sleep(5)
+
+    def fastSchedule(self):
+        # 首先判断有无故障充电桩
+        # 只考虑单一充电桩故障且正好该充电桩有车排队的情况
+        if self.badfastChargeList:
+            # 故障采用优先级调度
+            return self.badfastChargeList[0]
+
+        # 没有故障充电桩的情况
+        # 设置时间代价列表 (time, id)
+        time_cost_list = list()
+        # 遍历充电桩列表
+        for i in self.fastChargeList:
+            # 任意充电桩队列存在空位
+            if (i.haveEmpty()):
+                if (i.queue.isEmpty()):
+                    time_cost_list.append((0, i.id))
+                else:
+                    time_cost = i.getFirst().capacity * 3600 / i.power - i.time
+                    time_cost_list.append((time_cost, i.id))
+
+        # 如果队列为空，说明没有充电桩队列存在空位
+        if not time_cost_list:
+            return None
+
+        # 否则就升序排列，返回时间代价最小的充电桩
+        time_cost_list.sort()
+        return time_cost_list[0]
+
+    def slowSchedule(self):
+        # 首先判断有无故障充电桩
+        # 只考虑单一充电桩故障且正好该充电桩有车排队的情况
+        if self.badtardyChargeList:
+            # 故障采用优先级调度
+            return self.badtardyChargeList[0]
+
+        # 没有故障充电桩的情况
+        # 设置时间代价列表 (time, id)
+        time_cost_list = list()
+        # 遍历充电桩列表
+        for i in self.tardyChargeList:
+            # 任意充电桩队列存在空位
+            if (i.haveEmpty()):
+                if (i.queue.isEmpty()):
+                    time_cost_list.append((0, i.id))
+                else:
+                    time_cost = i.getFirst().capacity * 3600 / i.power - i.time
+                    time_cost_list.append((time_cost, i.id))
+
+        # 如果队列为空，说明没有充电桩队列存在空位
+        if not time_cost_list:
+            return None
+
+        # 否则就升序排列，返回时间代价最小的充电桩
+        time_cost_list.sort()
+        return time_cost_list[0]
 
     def getModeNum(self, mode):
         # 获取特定模式下的车辆数量
