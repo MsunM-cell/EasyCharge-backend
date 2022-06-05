@@ -169,8 +169,8 @@ def requestCharge():
 
 @app.route('/order/getQueuePos', methods=['GET'])
 def getQueuePos():
-    token = request.json.get('token')
-    orderId = request.json.get('orderId')
+    token = request.args.get('token')
+    orderId = request.args.get('orderId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -210,8 +210,8 @@ def getQueuePos():
 
 @app.route('/order/getFrontCarNum', methods=['GET'])
 def getFrontCarNum():
-    token = request.json.get('token')
-    orderId = request.json.get('orderId')
+    token = request.args.get('token')
+    orderId = request.args.get('orderId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -250,7 +250,7 @@ def getFrontCarNum():
 
 @app.route('/orders/<int:id>', methods=['GET'])
 def getOrder(id):
-    token = request.json.get('token')
+    token = request.args.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -281,7 +281,7 @@ def getOrder(id):
 
 @app.route('/orders/details/<int:id>', methods=['GET'])
 def getOrderDetails(id):
-    token = request.json.get('token')
+    token = request.args.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -312,7 +312,7 @@ def getOrderDetails(id):
 
 @app.route('/orders/charge/<int:id>', methods=['GET'])
 def getChargingInfo(id):
-    token = request.json.get('token')
+    token = request.args.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -405,7 +405,7 @@ def putCapacity(id):
 
 @app.route('/orders', methods=['GET'])
 def getorders():
-    token = request.json.get('token')
+    token = request.args.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -495,7 +495,7 @@ def putPay(id):
 
 @app.route('/admin/getChargePoint', methods=['GET'])
 def getChargePoint():
-    token = request.json.get('token')
+    token = request.args.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -526,8 +526,8 @@ def getChargePoint():
 
 @app.route('/admin/getChargePointCar', methods=['GET'])
 def getChargePointCar():
-    token = request.json.get('token')
-    pointId = request.json.get('pointId')
+    token = request.args.get('token')
+    pointId = request.args.get('pointId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
@@ -624,10 +624,10 @@ def adminLogin():
 
 @app.route('/admin/getPointChargeReport', methods=['GET'])
 def getPointChargeReport():
-    token = request.json.get('token')
-    start = request.json.get('start')
-    end = request.json.get('end')
-    id = request.json.get('pointId')
+    token = request.args.get('token')
+    start = request.args.get('start')
+    end = request.args.get('end')
+    id = request.args.get('pointId')
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
