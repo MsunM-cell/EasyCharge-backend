@@ -81,70 +81,6 @@ def userLogin():
         return response, 200, {"Content-Type": "application/json"}
 
 
-@app.route('/admin/register', methods=['POST'])
-def adminRegister():
-    adminname = request.json.get('adminname')
-    password = request.json.get('password')
-    telephone = request.json.get('telephone')
-    email = request.json.get('email')
-    if(adminname == "" or password == ""):
-        data = {
-            "code": -1,
-            "msg": "用户名或密码为空"
-        }
-    else:
-        if(database.getAdminByName(adminname) != 0):
-            data = {
-                "code": -2,
-                "msg": "用户名已存在"
-            }
-        else:
-            password = encryption.getMd5(password)
-            id = database.getAdminsNum()+1
-            database.insertAdmin(id, adminname, password, telephone, email)
-            data = {
-                "code": 200,
-                "msg": "Success",
-                "manageID": id
-            }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
-
-
-@app.route('/admin/login', methods=['POST'])
-def adminLogin():
-    adminname = request.json.get('adminname')
-    password = request.json.get('password')
-    if(adminname == "" or password == ""):
-        data = {
-            "code": -1,
-            "msg": "用户名或密码为空"
-        }
-    else:
-        myPass = database.getAdminPassByName(adminname)
-        if(encryption.getMd5(password) == myPass):
-            ecbObj = encryption.ECBCipher()
-            id = database.getAdminByName(adminname)
-            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
-            if(token == None):
-                data = {
-                    "code": -2,
-                    "msg": "Token生成失败"
-                }
-            else:
-                data = {
-                    "code": 200,
-                    "msg": "Success",
-                    "token": token,
-                    "id":id
-                }
-        else:
-            data = {
-                "code": -3,
-                "msg": "登录失败，请检查用户名或密码是否正确"
-            }
-        response = json.dumps(data)
-        return response, 200, {"Content-Type": "application/json"}
 
 
 @app.route('/users/setInfo', methods=['POST'])
@@ -312,129 +248,6 @@ def getFrontCarNum():
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
-
-@app.route('/admin/onChargePoint', methods=['POST'])
-def onChargePoint():
-    token = request.json.get('token')
-    pointId = request.json.get('pointId')
-    result = encryption.tokenDecode(token)
-    if(result == None):
-        data = {
-            "code": -1,
-            "msg": "登录信息有误，请退出账号重新登录"
-        }
-    else:
-        if(result['time'] < int(time.time())):
-            data = {
-                "code": -2,
-                "msg": "登录信息已失效，请退出账号重新登录"
-            }
-        else:
-            if(charging.openCharge(pointId)):
-                data = {
-                    "code": 200,
-                    "msg": "",
-                }
-            else:
-                data = {
-                    "code": -1,
-                    "msg": "充电桩不存在",
-                }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
-
-@app.route('/admin/setPointError', methods=['POST'])
-def setPointError():
-    token = request.json.get('token')
-    pointId = request.json.get('pointId')
-    result = encryption.tokenDecode(token)
-    if(result == None):
-        data = {
-            "code": -1,
-            "msg": "登录信息有误，请退出账号重新登录"
-        }
-    else:
-        if(result['time'] < int(time.time())):
-            data = {
-                "code": -2,
-                "msg": "登录信息已失效，请退出账号重新登录"
-            }
-        else:
-            if(charging.setChargeError(pointId)):
-                data = {
-                    "code": 200,
-                    "msg": "",
-                }
-            else:
-                data = {
-                    "code": -1,
-                    "msg": "充电桩不存在",
-                }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
-
-
-@app.route('/admin/setPointOK', methods=['POST'])
-def setPointOK():
-    token = request.json.get('token')
-    pointId = request.json.get('pointId')
-    result = encryption.tokenDecode(token)
-    if(result == None):
-        data = {
-            "code": -1,
-            "msg": "登录信息有误，请退出账号重新登录"
-        }
-    else:
-        if(result['time'] < int(time.time())):
-            data = {
-                "code": -2,
-                "msg": "登录信息已失效，请退出账号重新登录"
-            }
-        else:
-            if(charging.setChargeOK(pointId)):
-                data = {
-                    "code": 200,
-                    "msg": "",
-                }
-            else:
-                data = {
-                    "code": -1,
-                    "msg": "充电桩不存在",
-                }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
-
-
-@app.route('/admin/closeChargePoint', methods=['POST'])
-def closeChargePoint():
-    token = request.json.get('token')
-    pointId = request.json.get('pointId')
-    result = encryption.tokenDecode(token)
-    if(result == None):
-        data = {
-            "code": -1,
-            "msg": "登录信息有误，请退出账号重新登录"
-        }
-    else:
-        if(result['time'] < int(time.time())):
-            data = {
-                "code": -2,
-                "msg": "登录信息已失效，请退出账号重新登录"
-            }
-        else:
-            if(charging.closeCharge(pointId)):
-                data = {
-                    "code": 200,
-                    "msg": "",
-                }
-            else:
-                data = {
-                    "code": -1,
-                    "msg": "充电桩不存在",
-                }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
-
 @app.route('/orders/<int:id>', methods=['GET'])
 def getOrder(id):
     token = request.json.get('token')
@@ -590,6 +403,37 @@ def putCapacity(id):
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
+@app.route('/orders', methods=['GET'])
+def getorders():
+    token = request.json.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            List=database.getordersByUser(result['id'])
+            if(List!=None):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                    "data":List
+                }
+            else:
+                data = {
+                    "code": -3,
+                    "msg": "信息获取失败"
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
 @app.route('/orders/cancel/<int:id>', methods=['PUT'])
 def cancleOrder(id):
     token = request.json.get('token')
@@ -711,36 +555,71 @@ def getChargePointCar():
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
-@app.route('/orders', methods=['GET'])
-def getorders():
-    token = request.json.get('token')
-    result = encryption.tokenDecode(token)
-    if(result == None):
+@app.route('/admin/register', methods=['POST'])
+def adminRegister():
+    adminname = request.json.get('adminname')
+    password = request.json.get('password')
+    telephone = request.json.get('telephone')
+    email = request.json.get('email')
+    if(adminname == "" or password == ""):
         data = {
             "code": -1,
-            "msg": "登录信息有误，请退出账号重新登录"
+            "msg": "用户名或密码为空"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(database.getAdminByName(adminname) != 0):
             data = {
                 "code": -2,
-                "msg": "登录信息已失效，请退出账号重新登录"
+                "msg": "用户名已存在"
             }
         else:
-            List=database.getordersByUser(result['id'])
-            if(List!=None):
+            password = encryption.getMd5(password)
+            id = database.getAdminsNum()+1
+            database.insertAdmin(id, adminname, password, telephone, email)
+            data = {
+                "code": 200,
+                "msg": "Success",
+                "manageID": id
+            }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
+@app.route('/admin/login', methods=['POST'])
+def adminLogin():
+    adminname = request.json.get('adminname')
+    password = request.json.get('password')
+    if(adminname == "" or password == ""):
+        data = {
+            "code": -1,
+            "msg": "用户名或密码为空"
+        }
+    else:
+        myPass = database.getAdminPassByName(adminname)
+        if(encryption.getMd5(password) == myPass):
+            ecbObj = encryption.ECBCipher()
+            id = database.getAdminByName(adminname)
+            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
+            if(token == None):
                 data = {
-                    "code": 200,
-                    "msg": "",
-                    "data":List
+                    "code": -2,
+                    "msg": "Token生成失败"
                 }
             else:
                 data = {
-                    "code": -3,
-                    "msg": "信息获取失败"
+                    "code": 200,
+                    "msg": "Success",
+                    "token": token,
+                    "id":id
                 }
-    response = json.dumps(data)
-    return response, 200, {"Content-Type": "application/json"}
+        else:
+            data = {
+                "code": -3,
+                "msg": "登录失败，请检查用户名或密码是否正确"
+            }
+        response = json.dumps(data)
+        return response, 200, {"Content-Type": "application/json"}
+
 
 @app.route('/admin/getPointChargeReport', methods=['GET'])
 def getPointChargeReport():
@@ -777,6 +656,128 @@ def getPointChargeReport():
     return response, 200, {"Content-Type": "application/json"}
 
 
+
+@app.route('/admin/onChargePoint', methods=['POST'])
+def onChargePoint():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.openCharge(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/admin/setPointError', methods=['POST'])
+def setPointError():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.setChargeError(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
+@app.route('/admin/setPointOK', methods=['POST'])
+def setPointOK():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.setChargeOK(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
+@app.route('/admin/closeChargePoint', methods=['POST'])
+def closeChargePoint():
+    token = request.json.get('token')
+    pointId = request.json.get('pointId')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            if(charging.closeCharge(pointId)):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+            else:
+                data = {
+                    "code": -1,
+                    "msg": "充电桩不存在",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
 
 
 
