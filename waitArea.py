@@ -62,13 +62,13 @@ class waitingArea(object):
                 if(item.id == id):
                     
                     return i
-            return -1
+            return 1
         else:
             for item in self.tardyQue.array:
                 i += 1
                 if(item.id == id):
                     return i
-            return -1
+            return 1
     
     def setMode(self,id,mode):
         if(mode==0):#请求修改为快充，当前为慢充
