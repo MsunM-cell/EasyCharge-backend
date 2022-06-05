@@ -41,12 +41,12 @@ class Charge():
         return not self.que.isFull()
 
     def getFirst(self):
-        if(not self.que.isEmpty):
+        if(not self.que.isEmpty()):
             return self.que.getItem(0)
         return None
 
     def getSecond(self):
-        if(not self.que.isEmpty):
+        if(not self.que.isEmpty()):
             return self.que.getItem(1)
         return None
 
@@ -73,7 +73,7 @@ class Charge():
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量
             self.curCap = self.time/3600.0*self.power  # 充电量
             self.cost = self.cost+60/3600.0*self.power*self.price  # 充电费用
-            if(self.curCap >= self.getFirst().capacity):
+            if(self.curCap >= int(self.getFirst().capacity)):
                 break
         self.using = False
         self.endTime = time.strftime('%Y-%m-%d %H:%M:%S')

@@ -19,7 +19,7 @@ class chargeArea(object):
         self.tardyChargeList.append(charge.Charge(1))
         self.tardyChargeList.append(charge.Charge(1))
         thread = threading.Thread(target=self.haveEmpty)
-        thread.start()
+        #thread.start()
 
     def haveEmpty(self):
         while(True):

@@ -9,29 +9,32 @@ class waitingArea(object):
     def haveEmpty(self, mode):
         if(mode == 0):
             # 快充
-            if(not self.fastQue.full):
+            if(not self.fastQue.isFull()):
                 return True
             else:
                 return False
         else:
             # 慢充
-            if(not self.tardyQue.full):
+            if(not self.tardyQue.isFull()):
                 return True
             else:
                 return False
 
     def callin(self, order):
+
         if(order.mode == 0):
             # 快充
-            if(not self.fastQue.full):
-                self.fastQue.put(order)
+
+            if(not self.fastQue.isFull()):
+                self.fastQue.push(order)
+
                 return True
             else:
                 return False
         else:
             # 慢充
-            if(not self.tardyQue.full):
-                self.tardyQue.put(order)
+            if(not self.tardyQue.isFull()):
+                self.tardyQue.push(order)
                 return True
             else:
                 return False
@@ -56,7 +59,9 @@ class waitingArea(object):
         if(mode == 0):
             for item in self.fastQue.array:
                 i += 1
+
                 if(item.id == id):
+                    
                     return i
             return -1
         else:

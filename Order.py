@@ -1,5 +1,3 @@
-from os import stat
-from tkinter import INSERT
 import database
 import time
 

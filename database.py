@@ -7,7 +7,13 @@ import time
 
 conn = mysql.connector.connect(
     user='EasyCharge', password='XKThZNNwdTW7CMyy', database='easycharge')
-cursor = conn.cursor(dictionary=True)
+
+
+def connectDB():
+    tmp = mysql.connector.connect(
+    user='EasyCharge', password='XKThZNNwdTW7CMyy', database='easycharge')
+    return tmp
+
 
 
 # 创建对象的基类:
@@ -97,10 +103,18 @@ DBSession = sessionmaker(bind=engine)
 
 
 def getUsersNum():
-    cursor.execute('SELECT MAX(id) FROM User')
+    conn = connectDB()
+    cursor = conn.cursor()
+    cursor.execute('SELECT MAX(id) FROM User;')
     values = cursor.fetchone()
+    if not values:
+        return 0
+    if values[0] == None:
+        return 0
     # print(values)
-    return values[0]
+    result = values[0]
+    # print(result)
+    return result
 
 
 def insertUser(tmp_id, tmp_username, tmp_password, tmp_telephone, tmp_email):
@@ -171,8 +185,14 @@ def insertAdmin(tmp_id, tmp_Adminname, tmp_password, tmp_telephone, tmp_email):
 
 
 def getAdminsNum():
+    conn = connectDB()
+    cursor = conn.cursor()
     cursor.execute('SELECT MAX(id) FROM Admin')
     values = cursor.fetchone()
+    if not values:
+        return 0
+    if values[0] == None:
+        return 0
     # print(values)
     return values[0]
 
@@ -210,8 +230,14 @@ def getAdminPassById(adminid):
 
 
 def getOrdersNum():
+    conn = connectDB()
+    cursor = conn.cursor()
     cursor.execute('SELECT MAX(id) FROM OrderList')
     values = cursor.fetchone()
+    if not values:
+        return 0
+    if values[0] == None:
+        return 0
     # print(values)
     return values[0]
 
@@ -271,8 +297,14 @@ def setOrderEnd(tmp_id):
 
 
 def getOrderDetailNum():
+    conn = connectDB()
+    cursor = conn.cursor()
     cursor.execute('SELECT MAX(id) FROM ChargeInfo')
     values = cursor.fetchone()
+    if not values:
+        return 0
+    if values[0] == None:
+        return 0
     # print(values)
     return values[0]
 
@@ -371,7 +403,7 @@ def getOrderById(orderId):
     tmp = session.query(OrderList).filter_by(id=orderId).first()
     if not tmp:
         return None
-    result = order(tmp.id, tmp.status, tmp.mode, tmp.capacity, tmp.create_time)
+    result = order(tmp.id, tmp.user_id, tmp.status, tmp.mode, tmp.capacity, tmp.create_time)
     return result
 
 
@@ -428,9 +460,9 @@ def getPointReport(start, end, id):
     endStruct = time.strptime(end, "%Y-%m-%d")
     endStamp = time.mktime(endStruct)
     session = DBSession()
-    tmp = session.query(ChargeInfo).all()
+    tmp = session.query(ChargeInfo).group_by(ChargeInfo.station_id).all()
     if (id != None):
-        tmp = session.query(ChargeInfo).filter_by(station_id=id).all()
+        tmp = session.query(ChargeInfo).filter_by(station_id=id).group_by(ChargeInfo.station_id).all()
     if not tmp:
         return None
     listInfo = []
