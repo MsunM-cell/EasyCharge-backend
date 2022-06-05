@@ -224,7 +224,7 @@ def requestCharge():
                     }
             else:
                 data = {
-                    "code": -3,
+                    "code": -4,
                     "msg": "等待区已满，请稍后再试"
                 }
     response = json.dumps(data)

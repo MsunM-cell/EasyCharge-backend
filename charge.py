@@ -11,6 +11,7 @@ class Charge():
         self.mode = mode
         self.using = False
         self.id = Charge.num
+        self.time=0
         Charge.num += 1
         self.que = Queue.Queue(2)
         if(mode == 0):

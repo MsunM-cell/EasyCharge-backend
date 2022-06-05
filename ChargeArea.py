@@ -52,7 +52,7 @@ class chargeArea(object):
                     slow_charge.pushQue(slow_order)
                     slow_order.setStatus(1)
 
-            time.sleep(5)
+            #time.sleep(1)
 
     def fastSchedule(self):
         # 首先判断有无故障充电桩
