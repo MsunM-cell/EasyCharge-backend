@@ -546,7 +546,7 @@ def putMode(id):
             }
         else:
             flag=wait.setMode(id,mode)
-            if(flag == None): 
+            if(flag == False): 
                 data = {
                     "code": -1,
                     "msg": "未查找到该订单信息"
@@ -727,7 +727,7 @@ def getorders():
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            List=database.getordersByUser()
+            List=database.getordersByUser(result['id'])
             if(List!=None):
                 data = {
                     "code": 200,

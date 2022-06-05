@@ -75,12 +75,14 @@ class waitingArea(object):
             for item in self.tardyQue.array:
                 if(item.id == id):
                     item.mode=0
+                    item.update()
                     return True
             return False
         else:
             for item in self.fastQue.array:
                 if(item.id == id):
                     item.mode=1
+                    item.update()
                     return True
             return False
 
@@ -88,10 +90,12 @@ class waitingArea(object):
         for item in self.fastQue.array:
             if(item.id == id):
                 item.capacity=capacity
+                item.update()
                 return True
         for item in self.tardyQue.array:
             if(item.id == id):
                 item.capacity=capacity
+                item.update()
                 return True
         return False
         

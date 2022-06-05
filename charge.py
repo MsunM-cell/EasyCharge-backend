@@ -68,7 +68,7 @@ class Charge():
 
     def billing(self):
         while(self.using and self.usable):
-            time.sleep(60)  # 测试时可以6秒模拟现实中的一分钟
+            time.sleep(1)  # 测试时可以6秒模拟现实中的一分钟
             self.time += 60
             self.chargeTime += 60  # 总时长
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量

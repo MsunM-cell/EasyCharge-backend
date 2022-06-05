@@ -364,7 +364,7 @@ def insertOrderDetail(tmp_id, tmp_orderid, tmp_creatTime, tmp_chargeId, tmp_curC
 
 def getOrderDetailByOrder(tmp_orderid):
     session = DBSession()
-    tmp = session.query(ChargeInfo).filter_by(ordier_id=tmp_orderid).first()
+    tmp = session.query(ChargeInfo).filter_by(order_id=tmp_orderid).first()
     if not tmp:
         return None
     orderdict = {
