@@ -76,7 +76,7 @@ class chargeArea(object):
 
         # 升序排列，返回时间代价最小的充电桩
         time_cost_list.sort()
-        return time_cost_list[0]
+        return self.getChargeById(time_cost_list[0][1]) 
 
     def slowSchedule(self):
         # 首先判断有无故障充电桩
@@ -100,7 +100,7 @@ class chargeArea(object):
 
         # 升序排列，返回时间代价最小的充电桩
         time_cost_list.sort()
-        return time_cost_list[0]
+        return self.getChargeById(time_cost_list[0][1]) 
 
     def getModeNum(self, mode):
         # 获取特定模式下的车辆数量
