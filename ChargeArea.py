@@ -1,3 +1,4 @@
+from sqlalchemy import false, true
 import charge
 import threading
 import time
@@ -22,21 +23,31 @@ class chargeArea(object):
 
     def haveEmpty(self):
         while(True):
-            # 判断快充等候区有无订单
-            fast_order = self.waitArea.callout(0)
-            if fast_order != None:
-                # 找到匹配充电桩
-                fast_charge = self.fastSchedule()
-                if fast_charge != None:
+            # 判断快充充电桩队列是否存在空位
+            fast_have_empty = false
+            for i in self.fastChargeList:
+                if i.haveEmpty():
+                    fast_have_empty = true
+            if fast_have_empty:
+                # 判断快充等候区有无订单
+                fast_order = self.waitArea.callout(0)
+                if fast_order != None:
+                    # 找到匹配充电桩
+                    fast_charge = self.fastSchedule()
                     fast_charge.pushQue(fast_order)
                     fast_order.setStatus(1)
 
-            # 判断慢充等候区有无订单
-            slow_order = self.waitArea.callout(1)
-            if slow_order != None:
-                # 找到匹配充电桩
-                slow_charge = self.slowSchedule()
-                if slow_charge != None:
+            # 判断慢充充电桩队列是否存在空位
+            slow_have_empty = false
+            for i in self.slowChargeList:
+                if i.haveEmpty():
+                    slow_have_empty = true
+            if slow_have_empty:
+                # 判断慢充充等候区有无订单
+                slow_order = self.waitArea.callout(1)
+                if slow_order != None:
+                    # 找到匹配充电桩
+                    slow_charge = self.slowSchedule()
                     slow_charge.pushQue(slow_order)
                     slow_order.setStatus(1)
 
@@ -62,11 +73,7 @@ class chargeArea(object):
                     time_cost = i.getFirst().capacity * 3600 / i.power - i.time
                     time_cost_list.append((time_cost, i.id))
 
-        # 如果队列为空，说明没有充电桩队列存在空位
-        if not time_cost_list:
-            return None
-
-        # 否则就升序排列，返回时间代价最小的充电桩
+        # 升序排列，返回时间代价最小的充电桩
         time_cost_list.sort()
         return time_cost_list[0]
 
@@ -90,11 +97,7 @@ class chargeArea(object):
                     time_cost = i.getFirst().capacity * 3600 / i.power - i.time
                     time_cost_list.append((time_cost, i.id))
 
-        # 如果队列为空，说明没有充电桩队列存在空位
-        if not time_cost_list:
-            return None
-
-        # 否则就升序排列，返回时间代价最小的充电桩
+        # 升序排列，返回时间代价最小的充电桩
         time_cost_list.sort()
         return time_cost_list[0]
 
