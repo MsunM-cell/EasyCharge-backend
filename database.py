@@ -243,6 +243,8 @@ def getOrdersNum():
 
 
 def insertOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
+    intCapacity = int(tmp_capacity * 100)    
+    intTotalCapacity = int(tmp_totalCapacity * 100)
     session = DBSession()
     orderlist = OrderList(
         id=tmp_id,
@@ -250,8 +252,8 @@ def insertOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_ca
         status=tmp_status,
         create_time=tmp_creatTime,
         mode=tmp_mode,
-        capacity=tmp_capacity,
-        totalCapacity=tmp_totalCapacity
+        capacity=intCapacity,
+        totalCapacity=intTotalCapacity
     )
     session.add(orderlist)
     session.commit()
@@ -266,16 +268,18 @@ def updateOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_ca
     tmp = session.query(OrderList).filter_by(id=tmp_id).first()
     if not tmp:
         return -2
+    intCapacity = int(tmp_capacity * 100)    
+    intTotalCapacity = int(tmp_totalCapacity * 100)
     tmp.user_id = tmp_userid
     tmp.status = tmp_status
     tmp.create_time = tmp_creatTime
     tmp.mode = tmp_mode
-    tmp.capacity = tmp_capacity
-    tmp.totalCapacity = tmp_totalCapacity
+    tmp.capacity = intCapacity
+    tmp.totalCapacity = intTotalCapacity
     session.commit()
     test = session.query(OrderList).filter_by(id=tmp_id).first()
     if (test.user_id != tmp_userid or test.status != tmp_status or test.create_time != tmp_creatTime or
-            test.mode != tmp_mode or test.capacity != tmp_capacity or test.totalCapacity != tmp_totalCapacity):
+            test.mode != tmp_mode or test.capacity != intCapacity or test.totalCapacity != intTotalCapacity):
         return -1
     return 0
 
@@ -310,34 +314,39 @@ def getOrderDetailNum():
 
 
 def updateOrderDetail(tmp_id, tmp_creatTime, tmp_mode, tmp_capacity):
+    intCapacity = int(tmp_capacity * 100) 
     session = DBSession()
     tmp = session.query(ChargeInfo).filter_by(id=tmp_id).first()
     if not tmp:
         return -2
     tmp.create_time = tmp_creatTime
     tmp.mode = tmp_mode
-    tmp.charge_capacity = tmp_capacity
+    tmp.charge_capacity = intCapacity
     test = session.query(ChargeInfo).filter_by(id=tmp_id).first()
-    if (test.create_time != tmp_creatTime or test.mode != tmp_mode or test.charge_capacity != tmp_capacity):
+    if (test.create_time != tmp_creatTime or test.mode != tmp_mode or test.charge_capacity != intCapacity):
         return -1
     return 0
 
 
 def insertOrderDetail(tmp_id, tmp_orderid, tmp_creatTime, tmp_chargeId, tmp_curCap, tmp_totaltime,
                       tmp_startTime, tmp_endTime, tmp_capCost, tmp_serveCost, tmp_cost, tmp_mode):
+    intCapacity = int(tmp_curCap * 100) 
     session = DBSession()
+    intcost = int(tmp_cost * 100)
+    intScost = int(tmp_serveCost * 100)
+    intCcost = int(tmp_capCost * 100)
     chargeinfo = ChargeInfo(
         id=tmp_id,
         order_id=tmp_orderid,
         station_id=tmp_chargeId,
         start_time=tmp_startTime,
         stop_time=tmp_endTime,
-        charge_capacity=tmp_curCap,
-        cost=tmp_cost,
+        charge_capacity=intCapacity,
+        cost=intcost,
         create_time=tmp_creatTime,
         totaltime=tmp_totaltime,
-        capCost=tmp_capCost,
-        serveCost=tmp_serveCost,
+        capCost=intCcost,
+        serveCost=intScost,
         mode=tmp_mode
     )
     session.add(chargeinfo)
@@ -367,18 +376,22 @@ def getOrderDetailByOrder(tmp_orderid):
     tmp = session.query(ChargeInfo).filter_by(order_id=tmp_orderid).first()
     if not tmp:
         return None
+    floatCapacity = float(tmp.charge_capacity) / 100
+    floatCost = float(tmp.cost) / 100
+    floatSCost = float(tmp.serveCost) / 100
+    floatCCost = float(tmp.capCost) / 100
     orderdict = {
         'id': tmp.id,
         'orderid': tmp.order_id,
         'chargeId': tmp.station_id,
         'startTime': tmp.start_time,
         'endTime': tmp.stop_time,
-        'chargeCapacity': tmp.charge_capacity,
-        'cost': tmp.cost,
+        'chargeCapacity': floatCapacity,
+        'cost': floatCost,
         'creatTime': tmp.create_time,
         'totaltime': tmp.totaltime,
-        'capCost': tmp.capCost,
-        'serveCost': tmp.serveCost,
+        'capCost': floatCCost,
+        'serveCost': floatSCost,
         'mode': tmp.mode
     }
     return orderdict
@@ -403,7 +416,8 @@ def getOrderById(orderId):
     tmp = session.query(OrderList).filter_by(id=orderId).first()
     if not tmp:
         return None
-    result = order(tmp.id, tmp.user_id, tmp.status, tmp.mode, tmp.capacity, tmp.create_time)
+    floatCapacity = float(tmp.capacity) / 100
+    result = order(tmp.id, tmp.user_id, tmp.status, tmp.mode, floatCapacity, tmp.create_time)
     return result
 
 
@@ -415,12 +429,15 @@ def getordersByUser(userid):
         return None
     listorder = []
     for row in tmp:
+        floatCapacity = float(row.capacity) / 100
+        floatTotalCapacity = float(row.totalCapacity) / 100
         orderdict = {
+            
             'id': row.id,
             'userid': row.user_id,
             'status': row.status,
-            'totalCapacity': row.totalCapacity,
-            'capacity': row.capacity,
+            'totalCapacity': floatTotalCapacity,
+            'capacity': floatCapacity,
             'creatTime': row.create_time,
             'mode': row.mode
         }
@@ -471,33 +488,41 @@ def getPointReport(start, end, id):
         tmp_struct = time.strptime(tmp_time, "%Y-%m-%d %H:%M:%S")
         tmp_stamp = time.mktime(tmp_struct)
         if (tmp_stamp >= startStamp and tmp_stamp <= endStamp):
-            tmp_date = time.strptime("%Y-%m-%d", tmp_struct)
+            tmp_date = time.strftime("%Y-%m-%d", tmp_struct)
             tmp_staid = row.station_id
             appendflag = True
             for tmpdict in listInfo:
                 if not tmpdict:
                     break
                 if tmpdict['date'] == tmp_date and tmpdict['pointID'] == tmp_staid:
+                    floatCapacity = float(row.charge_capacity) / 100
+                    floatCost = float(row.cost) / 100
+                    floatSCost = float(row.serveCost) / 100
+                    floatCCost = float(row.capCost) / 100
                     appendflag = False
                     tmpdict['chargeTotalCnt'] = tmpdict['chargeTotalCnt'] + 1
                     tmpdict['chargeTotalTime'] = tmpdict['chargeTotalTime'] + row.totaltime
-                    tmpdict['chargeTotalElec'] = tmpdict['chargeTotalElec'] + row.charge_capacity
-                    tmpdict['chargeTotalCcost'] = tmpdict['chargeTotalCcost'] + row.capCost
-                    tmpdict['chargeTotalScost'] = tmpdict['chargeTotalScost'] + row.serveCost
-                    tmpdict['chargeTotalcost'] = tmpdict['chargeTotalcost'] + row.cost
+                    tmpdict['chargeTotalElec'] = tmpdict['chargeTotalElec'] + floatCapacity
+                    tmpdict['chargeTotalCcost'] = tmpdict['chargeTotalCcost'] + floatCCost
+                    tmpdict['chargeTotalScost'] = tmpdict['chargeTotalScost'] + floatSCost
+                    tmpdict['chargeTotalcost'] = tmpdict['chargeTotalcost'] + floatCost
                     break
 
 
             if appendflag:
+                floatCapacity = float(row.charge_capacity) / 100
+                floatCost = float(row.cost) / 100
+                floatSCost = float(row.serveCost) / 100
+                floatCCost = float(row.capCost) / 100
                 orderdict = {
                     "date": tmp_date,
                     "pointID": row.station_id,
                     "chargeTotalCnt": 1,
                     "chargeTotalTime": row.totaltime,
-                    "chargeTotalElec": row.charge_capacity,
-                    "chargeTotalCcost": row.capCost,
-                    "chargeTotalScost": row.serveCost,
-                    "chargeTotalcost": row.cost
+                    "chargeTotalElec": floatCapacity,
+                    "chargeTotalCcost": floatCCost,
+                    "chargeTotalScost": floatSCost,
+                    "chargeTotalcost": floatCost
                 }
                 listInfo.append(orderdict)
     return listInfo

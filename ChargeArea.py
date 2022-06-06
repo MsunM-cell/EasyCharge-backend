@@ -240,11 +240,18 @@ class chargeArea(object):
 
     def getWaitInfo(self, pointid):
         point = self.getChargeById(pointid)
+        if(point == None):
+            return None
         order = point.getSecond()
         if(order != None):
             return {
                 "id": order.userid,
                 "carElecTotal": order.totalCapacity,
                 "carElecRequest": order.capacity,
-                "carWaitTime": int(time.time-time.mktime(time.strptime(order.createTime, '%Y-%m-%d %H:%M:%S')))
+                "carWaitTime": int(time.time()- time.mktime(time.strptime(order.createTime, '%Y-%m-%d %H:%M:%S')))
             }
+        else:
+            return {
+
+            }
+        

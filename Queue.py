@@ -28,4 +28,7 @@ class Queue():
         return self.array.pop(0)
 
     def getItem(self, pos):
-        return self.array[pos]
+        if(pos<len(self.array)):
+            return self.array[pos]
+        else:
+            return None

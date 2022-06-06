@@ -528,7 +528,7 @@ def getChargePoint():
 @app.route('/admin/getChargePointCar', methods=['GET'])
 def getChargePointCar():
     token = request.args.get('token')
-    pointId = request.args.get('pointId')
+    pointId = int(request.args.get('pointId'))
     result = encryption.tokenDecode(token)
     if(result == None):
         data = {
