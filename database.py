@@ -288,10 +288,10 @@ def setOrderEnd(tmp_id):
     tmp = session.query(OrderList).filter_by(id=tmp_id).first()
     if not tmp:
         return -2
-    tmp.mode = 4
+    tmp.status = 4
     session.commit()
     test = session.query(OrderList).filter_by(id=tmp_id).first()
-    if test.mode != 4:
+    if test.status != 4:
         return -1
     return 0
 

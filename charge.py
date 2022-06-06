@@ -68,12 +68,12 @@ class Charge():
 
     def billing(self):
         while(self.using and self.usable):
-            time.sleep(60)  # 测试时可以6秒模拟现实中的一分钟
-            self.time += 6000
-            self.chargeTime += 6000  # 总时长
+            time.sleep(1)  # 测试时可以6秒模拟现实中的一分钟
+            self.time += 1
+            self.chargeTime += 1  # 总时长
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量
             self.curCap = self.time/3600.0*self.power  # 充电量
-            self.cost = self.cost+ self.time/3600.0*self.power*self.price  # 充电费用
+            self.cost = self.cost+ 1/3600.0*self.power*self.price  # 充电费用
             if(self.curCap >= int(self.getFirst().capacity)):
                 break
         self.using = False
@@ -86,6 +86,8 @@ class Charge():
         # 充电桩编号id、充电电量curCap、充电时长time、
         # 启动时间startTime、停止时间endTime、充电费用cost、服务费用0.8*curCap、
         # 总费用 ；
+        print(completeOrder.id, self.id, self.curCap,
+                                 self.time, self.startTime, self.endTime, self.cost,self.mode)
         Order.createOrederDetail(completeOrder.id, self.id, self.curCap,
                                  self.time, self.startTime, self.endTime, self.cost,self.mode)
 

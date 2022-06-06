@@ -177,22 +177,23 @@ class chargeArea(object):
 
     def getChargingInfo(self, id):
         for i in self.fastChargeList:
-            if(i.getFirst().id == id):
+            
+            if(i.getFirst()!=None and i.getFirst().id == id):
                 return {
                     "station": i.id,
-                    "capacity_cost": i.cost,
-                    "service_cost": i.curCap*0.8,
-                    "cost": i.cost+i.curCap*0.8,
+                    "capacity_cost": round(i.cost,2),
+                    "service_cost": round(i.curCap*0.8,2),
+                    "cost": round(i.cost,2)+round(i.curCap*0.8,2),
                     "start_time": i.startTime,
                     "time": i.time,
-                    "capacity": i.curCap
+                    "capacity": round(i.curCap,2)
                 }
-            elif(i.getSecond().id == id):
+            elif(i.getSecond()!=None and i.getSecond().id == id):
                 return{
                     "station": i.id
                 }
         for i in self.tardyChargeList:
-            if(i.getFirst().id == id):
+            if(i.getFirst()!=None and i.getFirst().id == id):
                 return {
                     "station": i.id,
                     "capacity_cost": i.cost,
@@ -202,7 +203,7 @@ class chargeArea(object):
                     "time": i.time,
                     "capacity": i.curCap
                 }
-            elif(i.getSecond().id == id):
+            elif(i.getSecond()!=None and i.getSecond().id == id):
                 return{
                     "station": i.id
                 }
