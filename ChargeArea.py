@@ -34,9 +34,14 @@ class chargeArea(object):
                     fast_order = self.waitArea.callout(0)
                     if fast_order != None:
                         # 找到匹配充电桩
+
                         fast_charge = self.fastSchedule()
                         fast_charge.pushQue(fast_order)
+             
                         fast_order.setStatus(1)
+         
+                        
+                        
 
             # 判断慢充充电桩队列是否存在空位
             # slow_have_empty = false
@@ -183,7 +188,7 @@ class chargeArea(object):
                     "station": i.id,
                     "capacity_cost": round(i.cost,2),
                     "service_cost": round(i.curCap*0.8,2),
-                    "cost": round(i.cost,2)+round(i.curCap*0.8,2),
+                    "cost": round(round(i.cost,2)+round(i.curCap*0.8,2),2),
                     "start_time": i.startTime,
                     "time": i.time,
                     "capacity": round(i.curCap,2)
@@ -196,12 +201,12 @@ class chargeArea(object):
             if(i.getFirst()!=None and i.getFirst().id == id):
                 return {
                     "station": i.id,
-                    "capacity_cost": i.cost,
-                    "service_cost": i.curCap*0.8,
-                    "cost": i.cost+i.curCap*0.8,
+                    "capacity_cost": round(i.cost,2),
+                    "service_cost": round(i.curCap*0.8,2),
+                    "cost": round(round(i.cost,2)+round(i.curCap*0.8,2),2),
                     "start_time": i.startTime,
                     "time": i.time,
-                    "capacity": i.curCap
+                    "capacity": round(i.curCap,2)
                 }
             elif(i.getSecond()!=None and i.getSecond().id == id):
                 return{
@@ -212,17 +217,17 @@ class chargeArea(object):
     def cancel(self, id):
         for i in self.fastChargeList:
             order = i.getFirst()
-            if(order.id == id):
+            if( order!= None and order.id == id):
                 i.endCharge()
                 return order.json()
-            elif(i.getSecond().id == id):
+            elif(i.getSecond() != None and i.getSecond().id == id):
                 return i.cancelOrder().json()
         for i in self.tardyChargeList:
             order = i.getFirst()
-            if(order.id == id):
+            if(order != None and order.id == id):
                 i.endCharge()
                 return order.json()
-            elif(i.getSecond().id == id):
+            elif(i.getSecond()!=None and i.getSecond().id == id):
                 return i.cancelOrder().json()
         return None
 

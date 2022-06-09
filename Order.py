@@ -14,6 +14,7 @@ class order(object):
 
     def setStatus(self, status):
         self.status = status
+        print(self.status,self.id,self.userid)
         self.update()
 
     def update(self):
@@ -21,6 +22,7 @@ class order(object):
                              self.mode, self.capacity,self.totalCapacity)
 
     def insert(self):
+
         database.insertOrder(self.id, self.userid, self.status, self.createTime,
                              self.mode, self.capacity,self.totalCapacity)
 

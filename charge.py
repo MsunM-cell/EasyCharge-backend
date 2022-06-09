@@ -22,7 +22,8 @@ class Charge():
         self.useTimes = 0  # 累计充电次数
         self.chargeTime = 0  # 充电总时长
         self.chargeCap = 0  # 充电总电量
-
+        self.cost=0
+        self.curCap=0
         # 需要充电的时间
         self.isOpen = True  # 充电桩开关
         self.priceThread = threading.Thread(target=self.setPrice)  # 价格调整线程
@@ -67,7 +68,7 @@ class Charge():
         self.billing()
 
     def billing(self):
-        while(self.using and self.usable):
+        while(self.using and self.usable and self.isOpen):
             time.sleep(1)  # 测试时可以6秒模拟现实中的一分钟
             self.time += 1
             self.chargeTime += 1  # 总时长
