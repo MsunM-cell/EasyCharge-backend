@@ -130,7 +130,7 @@ class Charge():
         mydict = {
             "pointId": self.id,
             "status": int(not self.usable),
-            "isOpen":int(not self.isOpen),
+            "isOpen":int(self.isOpen),
             "type": self.mode,
             "useTimes": self.useTimes,
             "chargeTime": self.chargeTime,

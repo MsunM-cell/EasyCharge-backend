@@ -540,7 +540,7 @@ def getPointReport(start, end, id):
         if (id != None):
             tmp = session.query(ChargeInfo).filter_by(station_id=id).all()
         if not tmp:
-            return None
+            return []
         listInfo = []
         for row in tmp:
             tmp_time = row.stop_time
