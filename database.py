@@ -538,6 +538,7 @@ def getPointReport(start, end, id):
         session = DBSession()
         tmp = session.query(ChargeInfo).all()
         if (id != None):
+            id=int(id)
             tmp = session.query(ChargeInfo).filter_by(station_id=id).all()
         if not tmp:
             return None

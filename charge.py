@@ -130,9 +130,10 @@ class Charge():
         mydict = {
             "pointId": self.id,
             "status": int(not self.usable),
+            "isOpen":int(not self.isOpen),
             "type": self.mode,
-            "chargeCut": self.useTimes,
+            "useTimes": self.useTimes,
             "chargeTime": self.chargeTime,
-            "chargeElec": self.chargeCap
+            "chargeElec": round(self.chargeCap,2)
         }
         return mydict
