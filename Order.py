@@ -1,5 +1,3 @@
-from os import stat
-from tkinter import INSERT
 import database
 import time
 
@@ -19,10 +17,14 @@ class order(object):
         self.update()
 
     def update(self):
+        if(self.totalCapacity==None):
+            self.totalCapacity=0
         database.updateOrder(self.id, self.userid, self.status, self.createTime,
                              self.mode, self.capacity,self.totalCapacity)
 
     def insert(self):
+        if(self.totalCapacity==None):
+            self.totalCapacity=0
         database.insertOrder(self.id, self.userid, self.status, self.createTime,
                              self.mode, self.capacity,self.totalCapacity)
 
