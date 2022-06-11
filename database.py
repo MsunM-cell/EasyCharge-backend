@@ -421,10 +421,10 @@ def getOrderDetailByOrder(tmp_orderid):
         tmp = session.query(ChargeInfo).filter_by(order_id=tmp_orderid).first()
         if not tmp:
             return None
-        floatCapacity = float(tmp.charge_capacity) / 100
-        floatCost = float(tmp.cost) / 100
-        floatSCost = float(tmp.serveCost) / 100
-        floatCCost = float(tmp.capCost) / 100
+        floatCapacity = round((float(tmp.charge_capacity) / 100), 2)
+        floatCost = round((float(tmp.cost) / 100), 2)
+        floatSCost = round((float(tmp.serveCost) / 100), 2)
+        floatCCost = round((float(tmp.capCost) / 100), 2)
         orderdict = {
             'id': tmp.id,
             'orderid': tmp.order_id,
@@ -467,7 +467,7 @@ def getOrderById(orderId):
         tmp = session.query(OrderList).filter_by(id=orderId).first()
         if not tmp:
             return None
-        floatCapacity = float(tmp.capacity) / 100
+        floatCapacity = round((float(tmp.capacity) / 100), 2)
         result = order(tmp.id, tmp.user_id, tmp.status, tmp.mode, floatCapacity, tmp.create_time)
         print(tmp.status)
         print(result.status)
@@ -485,8 +485,8 @@ def getordersByUser(userid):
             return None
         listorder = []
         for row in tmp:
-            floatCapacity = float(row.capacity) / 100
-            floatTotalCapacity = float(row.totalCapacity) / 100
+            floatCapacity = round((float(row.capacity) / 100), 2)
+            floatTotalCapacity = round((float(row.totalCapacity) / 100), 2)
             orderdict = {
                 
                 'id': row.id,
@@ -554,10 +554,10 @@ def getPointReport(start, end, id):
                     if not tmpdict:
                         break
                     if tmpdict['date'] == tmp_date and tmpdict['pointID'] == tmp_staid:
-                        floatCapacity = float(row.charge_capacity) / 100
-                        floatCost = float(row.cost) / 100
-                        floatSCost = float(row.serveCost) / 100
-                        floatCCost = float(row.capCost) / 100
+                        floatCapacity = round((float(row.charge_capacity) / 100), 2)
+                        floatCost = round((float(row.cost) / 100), 2)
+                        floatSCost = round((float(row.serveCost) / 100), 2)
+                        floatCCost = round((float(row.capCost) / 100), 2)
                         appendflag = False
                         tmpdict['chargeTotalCnt'] = tmpdict['chargeTotalCnt'] + 1
                         tmpdict['chargeTotalTime'] = tmpdict['chargeTotalTime'] + row.totaltime
@@ -569,10 +569,10 @@ def getPointReport(start, end, id):
 
 
                 if appendflag:
-                    floatCapacity = float(row.charge_capacity) / 100
-                    floatCost = float(row.cost) / 100
-                    floatSCost = float(row.serveCost) / 100
-                    floatCCost = float(row.capCost) / 100
+                    floatCapacity = round((float(row.charge_capacity) / 100), 2)
+                    floatCost = round((float(row.cost) / 100), 2)
+                    floatSCost = round((float(row.serveCost) / 100), 2)
+                    floatCCost = round((float(row.capCost) / 100), 2)
                     orderdict = {
                         "date": tmp_date,
                         "pointID": row.station_id,
