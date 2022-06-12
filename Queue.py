@@ -25,7 +25,10 @@ class Queue():
         self.array.append(value)
 
     def pop(self):
-        return self.array.pop(0)
+        if(self.array):
+            return self.array.pop(0)
+        else:
+            return None
 
     def getItem(self, pos):
         if(pos<len(self.array)):

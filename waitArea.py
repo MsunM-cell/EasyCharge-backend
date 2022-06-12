@@ -2,9 +2,11 @@ import Queue
 
 
 class waitingArea(object):
+    fastWaitNum=1 #快充等待数量
+    tardyWaitNum=2 #慢充等待数量
     def __init__(self):
-        self.fastQue = Queue.Queue(maxsize=2)
-        self.tardyQue = Queue.Queue(maxsize=4)
+        self.fastQue = Queue.Queue(maxsize=waitingArea.fastWaitNum)
+        self.tardyQue = Queue.Queue(maxsize=waitingArea.tardyWaitNum)
 
     def haveEmpty(self, mode):
         if(mode == 0):

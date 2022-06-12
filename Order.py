@@ -14,15 +14,18 @@ class order(object):
 
     def setStatus(self, status):
         self.status = status
-        print(self.status,self.id,self.userid)
+        time.sleep(1)
         self.update()
 
     def update(self):
+        if(self.totalCapacity==None):
+            self.totalCapacity=0
         database.updateOrder(self.id, self.userid, self.status, self.createTime,
                              self.mode, self.capacity,self.totalCapacity)
 
     def insert(self):
-
+        if(self.totalCapacity==None):
+            self.totalCapacity=0
         database.insertOrder(self.id, self.userid, self.status, self.createTime,
                              self.mode, self.capacity,self.totalCapacity)
 

@@ -112,9 +112,9 @@ def getUsersNum():
         return 0
     if values[0] == None:
         return 0
-    # print(values)
+
     result = values[0]
-    # print(result)
+
     return result
 
 
@@ -209,7 +209,7 @@ def getAdminsNum():
         return 0
     if values[0] == None:
         return 0
-    # print(values)
+
     return values[0]
 
 
@@ -266,13 +266,13 @@ def getOrdersNum():
         return 0
     if values[0] == None:
         return 0
-    # print(values)
     return values[0]
-
+#100 80 60 90
+#    90 1
+#       90
 
 def insertOrder(tmp_id, tmp_userid, tmp_status,  tmp_creatTime, tmp_mode, tmp_capacity, tmp_totalCapacity):
     try:
-        # print(type(tmp_capacity))
         intCapacity = int(tmp_capacity * 100)    
         intTotalCapacity = int(tmp_totalCapacity * 100)
         session = DBSession()
@@ -347,7 +347,7 @@ def getOrderDetailNum():
         return 0
     if values[0] == None:
         return 0
-    # print(values)
+
     return values[0]
 
 
@@ -469,8 +469,7 @@ def getOrderById(orderId):
             return None
         floatCapacity = round((float(tmp.capacity) / 100), 2)
         result = order(tmp.id, tmp.user_id, tmp.status, tmp.mode, floatCapacity, tmp.create_time)
-        print(tmp.status)
-        print(result.status)
+
         return result
     finally:
         session.close()

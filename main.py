@@ -113,6 +113,7 @@ def userSetInfo():
     return response, 200, {"Content-Type": "application/json"}
 
 
+
 @app.route('/order/requestCharge', methods=['POST'])
 def requestCharge():
     token = request.json.get('token')
@@ -204,6 +205,31 @@ def getQueuePos():
                     "code": -1,
                     "msg": "当前订单非等候区状态"
                 }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/user/getPointNum', methods=['GET'])
+def getPointNum():
+    token = request.args.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(time.time())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            data = {
+                "code": 200,
+                "msg": "",
+                "fastPoint":ChargeArea.chargeArea.fastNum,
+                "tardyPoint":ChargeArea.chargeArea.tardyNum
+            }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
@@ -344,6 +370,7 @@ def getChargingInfo(id):
 
 @app.route('/orders/mode/<int:id>', methods=['PUT'])
 def putMode(id):
+    id=int(id)
     token = request.json.get('token')
     mode=request.json.get('mode')
     result = encryption.tokenDecode(token)
@@ -375,6 +402,7 @@ def putMode(id):
 
 @app.route('/orders/capacity/<int:id>', methods=['PUT'])
 def putCapacity(id):
+    id=int(id)
     token = request.json.get('token')
     capacity=request.json.get('capacity')
     result = encryption.tokenDecode(token)
@@ -451,7 +479,7 @@ def cancleOrder(id):
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            order=charging.cancel(id)
+            order=charging.cancel(int(id))
             if(order == None):  
                 data = {
                     "code": -1,
@@ -468,6 +496,7 @@ def cancleOrder(id):
 
 @app.route('/orders/pay/<int:id>', methods=['PUT'])
 def putPay(id):
+    id=int(id)
     token = request.json.get('token')
     result = encryption.tokenDecode(token)
     if(result == None):
@@ -676,7 +705,8 @@ def onChargePoint():
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            if(charging.openCharge(pointId)):
+            if(charging.setChargeOK(pointId)):
+                charging.openCharge(pointId)
                 data = {
                     "code": 200,
                     "msg": "",
@@ -768,7 +798,8 @@ def closeChargePoint():
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            if(charging.closeCharge(pointId)):
+            charging.closeCharge(pointId)
+            if(charging.setChargeError(pointId)):
                 data = {
                     "code": 200,
                     "msg": "",
