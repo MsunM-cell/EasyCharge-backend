@@ -560,10 +560,10 @@ def getPointReport(start, end, id):
                         appendflag = False
                         tmpdict['chargeTotalCnt'] = tmpdict['chargeTotalCnt'] + 1
                         tmpdict['chargeTotalTime'] = tmpdict['chargeTotalTime'] + row.totaltime
-                        tmpdict['chargeTotalElec'] = tmpdict['chargeTotalElec'] + floatCapacity
-                        tmpdict['chargeTotalCcost'] = tmpdict['chargeTotalCcost'] + floatCCost
-                        tmpdict['chargeTotalScost'] = tmpdict['chargeTotalScost'] + floatSCost
-                        tmpdict['chargeTotalcost'] = tmpdict['chargeTotalcost'] + floatCost
+                        tmpdict['chargeTotalElec'] = round((tmpdict['chargeTotalElec'] + floatCapacity), 2)
+                        tmpdict['chargeTotalCcost'] = round((tmpdict['chargeTotalCcost'] + floatCCost), 2)
+                        tmpdict['chargeTotalScost'] = round((tmpdict['chargeTotalScost'] + floatSCost), 2)
+                        tmpdict['chargeTotalcost'] = round((tmpdict['chargeTotalcost'] + floatCost), 2)
                         break
 
 
