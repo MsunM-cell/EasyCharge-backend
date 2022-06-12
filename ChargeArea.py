@@ -5,8 +5,13 @@ import time
 
 
 class chargeArea(object):
+<<<<<<< HEAD
     fastNum=4 #快充数量
     tardyNum=8 #慢充数量
+=======
+    fastNum=2 #快充数量
+    tardyNum=3 #慢充数量
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
     def __init__(self, waitArea):
         self.fastChargeList = list()
         self.tardyChargeList = list()
@@ -40,6 +45,7 @@ class chargeArea(object):
                         if self.badfastChargeList:
                             # 故障采用优先级调度
                             time.sleep(5)
+<<<<<<< HEAD
                             if(self.badfastChargeList):
                                 fast_order=self.badfastChargeList[0].popQue()
                                 if(fast_order==None):
@@ -75,6 +81,43 @@ class chargeArea(object):
                             
                             slow_charge = self.slowSchedule()
 
+=======
+                            fast_order=self.badfastChargeList[0].popQue()
+                            if(fast_order==None):
+                                fast_order = self.waitArea.callout(0)
+
+                        else:
+                            fast_order = self.waitArea.callout(0)
+                        if fast_order != None:
+                            # 找到匹配充电桩
+                            fast_charge = self.fastSchedule()
+                            fast_charge.pushQue(fast_order)
+                
+                            fast_order.setStatus(1)            
+
+                # 判断慢充充电桩队列是否存在空位
+                # slow_have_empty = false
+                for i in self.tardyChargeList:
+                    if i.haveEmpty():
+                #         slow_have_empty = true
+                # if slow_have_empty:
+                    # 判断慢充充等候区有无订单
+                        slow_order=None
+                        if self.badtardyChargeList:
+                            time.sleep(5)
+                            # 故障采用优先级调度
+                            slow_order=self.badtardyChargeList[0].popQue()
+                            if(slow_order==None):
+                                slow_order = self.waitArea.callout(1)
+                        else:
+                            slow_order = self.waitArea.callout(1)
+                        
+                        if slow_order != None:
+                            # 找到匹配充电桩
+
+                            slow_charge = self.slowSchedule()
+
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
                             slow_charge.pushQue(slow_order)
                             slow_order.setStatus(1)
             else:
@@ -92,6 +135,7 @@ class chargeArea(object):
             if(waitList!=None and len(waitList)!=0):
                 for order in waitList:
                     list.append(order)
+<<<<<<< HEAD
         while list:
             for charge in self.fastChargeList:
                 if(charge.haveEmpty()):
@@ -115,6 +159,20 @@ class chargeArea(object):
                             break;  
                         else:
                             continue
+=======
+        for order in list:
+            if(order!=None):
+                if(order.mode==0):
+                    fast_charge = self.fastSchedule()
+                    fast_charge.pushQue(order)
+                    order.setStatus(1)  
+                else:
+                    slow_charge = self.slowSchedule()
+                    slow_charge.pushQue(order)
+                    order.setStatus(1)
+            else:
+                continue
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
         self.waitStop=False     
                               
     def fastSchedule(self):

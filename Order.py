@@ -14,7 +14,10 @@ class order(object):
 
     def setStatus(self, status):
         self.status = status
+<<<<<<< HEAD
         time.sleep(1)
+=======
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
         self.update()
 
     def update(self):

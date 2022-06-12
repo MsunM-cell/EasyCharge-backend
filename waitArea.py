@@ -2,8 +2,13 @@ import Queue
 
 
 class waitingArea(object):
+<<<<<<< HEAD
     fastWaitNum=1 #快充等待数量
     tardyWaitNum=2 #慢充等待数量
+=======
+    fastWaitNum=2 #快充等待数量
+    tardyWaitNum=4 #慢充等待数量
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
     def __init__(self):
         self.fastQue = Queue.Queue(maxsize=waitingArea.fastWaitNum)
         self.tardyQue = Queue.Queue(maxsize=waitingArea.tardyWaitNum)

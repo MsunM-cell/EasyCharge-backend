@@ -5,7 +5,11 @@ import time
 
 
 class Charge():
+<<<<<<< HEAD
     waitnum=3   #排队数量
+=======
+    waitnum=2   #排队数量
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
     num = 1
     
     def __init__(self, mode):
@@ -58,7 +62,11 @@ class Charge():
                 else:
                     result.append(temp)
             return result
+<<<<<<< HEAD
         return []
+=======
+        return None
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
 
     def popWait(self):
         result=[]
@@ -70,7 +78,11 @@ class Charge():
                     order=self.que.array.pop(temp)
                     result.append(order)
             return result
+<<<<<<< HEAD
         return []
+=======
+        return None
+>>>>>>> 54493c8175d83664ba996c373e92d35b89d0b241
     
     def getQueNum(self):
         return self.que.length()
