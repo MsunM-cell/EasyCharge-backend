@@ -2,39 +2,31 @@ import Queue
 
 
 class waitingArea(object):
-    fastWaitNum=1 #快充等待数量
-    tardyWaitNum=2 #慢充等待数量
+    totalNum=10
+    curNum=0
     def __init__(self):
-        self.fastQue = Queue.Queue(maxsize=waitingArea.fastWaitNum)
-        self.tardyQue = Queue.Queue(maxsize=waitingArea.tardyWaitNum)
+        self.fastQue = Queue.Queue(maxsize=waitingArea.totalNum)
+        self.tardyQue = Queue.Queue(maxsize=waitingArea.totalNum)
 
-    def haveEmpty(self, mode):
-        if(mode == 0):
-            # 快充
-            if(not self.fastQue.isFull()):
-                return True
-            else:
-                return False
+    def haveEmpty(self):
+        if(waitingArea.curNum<waitingArea.totalNum):
+            return True
         else:
-            # 慢充
-            if(not self.tardyQue.isFull()):
-                return True
-            else:
-                return False
+            return False
 
     def callin(self, order):
 
         if(order.mode == 0):
             # 快充
 
-            if(not self.fastQue.isFull()):
+            if(not self.fastQue.isFull() and self.haveEmpty()):
                 self.fastQue.push(order)
                 return True
             else:
                 return False
         else:
             # 慢充
-            if(not self.tardyQue.isFull()):
+            if(not self.tardyQue.isFull() and self.haveEmpty()):
                 self.tardyQue.push(order)
                 return True
             else:

@@ -6,8 +6,8 @@ import mytime
 
 
 class chargeArea(object):
-    fastNum=4 #快充数量
-    tardyNum=8 #慢充数量
+    fastNum=2 #快充数量
+    tardyNum=3 #慢充数量
     def __init__(self, waitArea):
         self.fastChargeList = list()
         self.tardyChargeList = list()

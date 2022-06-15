@@ -133,7 +133,7 @@ def requestCharge():
                 "msg": "登录信息已失效，请退出账号重新登录"
             }
         else:
-            if(wait.haveEmpty(mode)):
+            if(wait.haveEmpty()):
                 myorder = Order.order(database.getOrdersNum(
                 )+1,int(result['id']), 0, mode, capacity, mytime.mystrftime('%Y-%m-%d %H:%M:%S'),totalCapacity)
                 if(wait.callin(myorder)):
