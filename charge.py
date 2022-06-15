@@ -91,11 +91,11 @@ class Charge():
     def billing(self):
         while(self.using and self.usable and self.isOpen):
             time.sleep(1)  # 测试时可以6秒模拟现实中的一分钟
-            self.time += 1
-            self.chargeTime += 1  # 总时长
+            self.time += 10
+            self.chargeTime += 10  # 总时长
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量
             self.curCap = self.time/3600.0*self.power  # 充电量
-            self.cost = self.cost+ 1/3600.0*self.power*self.price  # 充电费用
+            self.cost = self.cost+ 10/3600.0*self.power*self.price  # 充电费用
             if(self.curCap >= int(self.getFirst().capacity)):
                 break
         
