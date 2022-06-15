@@ -4,7 +4,7 @@ import Order
 import encryption
 import ChargeArea
 import json
-import time
+import mytime
 from flask import Flask
 from flask import request
 from gevent import pywsgi
@@ -58,7 +58,7 @@ def userLogin():
         if(encryption.getMd5(password) == myPass):
             ecbObj = encryption.ECBCipher()
             id = database.getUserByName(username)
-            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
+            token = ecbObj.encrypted(str(id)+str(int(mytime.mytime())+86400))
             if(token == None):
                 data = {
                     "code": -2,
@@ -97,7 +97,7 @@ def userSetInfo():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -127,7 +127,7 @@ def requestCharge():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -135,7 +135,7 @@ def requestCharge():
         else:
             if(wait.haveEmpty(mode)):
                 myorder = Order.order(database.getOrdersNum(
-                )+1,int(result['id']), 0, mode, capacity, time.strftime('%Y-%m-%d %H:%M:%S'),totalCapacity)
+                )+1,int(result['id']), 0, mode, capacity, mytime.mystrftime('%Y-%m-%d %H:%M:%S'),totalCapacity)
                 if(wait.callin(myorder)):
                     myorder.insert()
                     if(myorder.mode==0):
@@ -179,7 +179,7 @@ def getQueuePos():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -218,7 +218,7 @@ def getPointNum():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -245,7 +245,7 @@ def getFrontCarNum():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -284,7 +284,7 @@ def getOrder(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -315,7 +315,7 @@ def getOrderDetails(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -347,7 +347,7 @@ def getChargingInfo(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -380,7 +380,7 @@ def putMode(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -412,7 +412,7 @@ def putCapacity(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -442,7 +442,7 @@ def getorders():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -473,7 +473,7 @@ def cancleOrder(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -505,7 +505,7 @@ def putPay(id):
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -533,7 +533,7 @@ def getChargePoint():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -565,7 +565,7 @@ def getChargePointCar():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -630,7 +630,7 @@ def adminLogin():
         if(encryption.getMd5(password) == myPass):
             ecbObj = encryption.ECBCipher()
             id = database.getAdminByName(adminname)
-            token = ecbObj.encrypted(str(id)+str(int(time.time())+86400))
+            token = ecbObj.encrypted(str(id)+str(int(mytime.mytime())+86400))
             if(token == None):
                 data = {
                     "code": -2,
@@ -665,7 +665,7 @@ def getPointChargeReport():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -699,7 +699,7 @@ def onChargePoint():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -730,7 +730,7 @@ def setPointError():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -761,7 +761,7 @@ def setPointOK():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -792,7 +792,7 @@ def closeChargePoint():
             "msg": "登录信息有误，请退出账号重新登录"
         }
     else:
-        if(result['time'] < int(time.time())):
+        if(result['time'] < int(mytime.mytime())):
             data = {
                 "code": -2,
                 "msg": "登录信息已失效，请退出账号重新登录"
@@ -812,7 +812,13 @@ def closeChargePoint():
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
-
+@app.route('/getTime', methods=['GET'])
+def getTime():
+    data = {
+        "time":mytime.mytime()
+    }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0',debug=True)  # 运行app

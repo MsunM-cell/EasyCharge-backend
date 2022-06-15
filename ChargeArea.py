@@ -2,6 +2,7 @@ from sqlalchemy import false, true
 import charge
 import threading
 import time
+import mytime
 
 
 class chargeArea(object):
@@ -327,7 +328,7 @@ class chargeArea(object):
                 "id": temp.userid,
                 "carElecTotal": temp.totalCapacity,
                 "carElecRequest": temp.capacity,
-                "carWaitTime": int(time.time()- time.mktime(time.strptime(temp.createTime, '%Y-%m-%d %H:%M:%S')))
+                "carWaitTime": int(mytime.mytime()- time.mktime(time.strptime(temp.createTime, '%Y-%m-%d %H:%M:%S')))
                 }
                 list.append(dict)
             return list

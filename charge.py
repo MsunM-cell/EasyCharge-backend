@@ -2,6 +2,7 @@ import Queue
 import Order
 import threading
 import time
+import mytime
 
 
 class Charge():
@@ -84,7 +85,7 @@ class Charge():
         self.getFirst().setStatus(2)
         self.time = 0
         self.cost = 0
-        self.startTime = time.strftime('%Y-%m-%d %H:%M:%S')
+        self.startTime = mytime.mystrftime('%Y-%m-%d %H:%M:%S')
         self.billing()
 
     def billing(self):
@@ -99,7 +100,7 @@ class Charge():
                 break
         
         self.using = False
-        self.endTime = time.strftime('%Y-%m-%d %H:%M:%S')
+        self.endTime = mytime.mystrftime('%Y-%m-%d %H:%M:%S')
         completeOrder = self.popQue()
 
         completeOrder.setStatus(3)
@@ -130,7 +131,7 @@ class Charge():
 
     def setPrice(self):
         while(True):
-            curHour = time.localtime().tm_hour
+            curHour = mytime.mylocaltime().tm_hour
             if((curHour >= 10 and curHour < 15) or (curHour >= 18 and curHour < 21)):
                 self.price = 1.0
             elif(curHour >= 23 or curHour < 7):
