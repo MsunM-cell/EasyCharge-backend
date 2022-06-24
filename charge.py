@@ -49,6 +49,29 @@ class Charge():
             return self.que.getItem(0)
         return None
 
+    def getInfo(self):
+        order=self.getFirst()
+        if(order!=None):
+            list=[]
+            waitList = self.getWait()
+            if(waitList != None):
+                for temp in waitList:
+                    dict={
+                    "id": temp.id,
+                    "carElecTotal": temp.totalCapacity,
+                    "carElecRequest": temp.capacity
+                    }
+                    list.append(dict)
+                data = {
+                        "orderid": order.id,
+                        "capacity": round(self.curCap,2),
+                        "cost":round(self.cost,2),
+                        "wait":list
+                    }
+            return data  
+        else:
+            return {}
+
     def getWait(self):
         result=[]
         if(not self.que.isEmpty()):
@@ -98,12 +121,19 @@ class Charge():
             self.cost = self.cost+ 10/3600.0*self.power*self.price  # 充电费用
             if(self.curCap >= int(self.getFirst().capacity)):
                 break
-        
-        self.using = False
-        self.endTime = mytime.mystrftime('%Y-%m-%d %H:%M:%S')
-        completeOrder = self.popQue()
+        if(self.usable==False):
+            completeOrder = self.getFirst()
+            completeOrder.setStatus(1)
+            Order.createOrederDetail(completeOrder.id, self.id, self.curCap,
+                                 self.time, self.startTime, self.endTime, self.cost,self.mode)
+        else:
+            self.using = False
+            self.endTime = mytime.mystrftime('%Y-%m-%d %H:%M:%S')
+            completeOrder = self.popQue()
 
-        completeOrder.setStatus(3)
+            completeOrder.setStatus(3)
+            Order.createOrederDetail(completeOrder.id, self.id, self.curCap,
+                                 self.time, self.startTime, self.endTime, self.cost,self.mode)
         # 产生详单
         # 详单编号 从数据库获得
         # 详单生成时间(无需存储，请求时计算)
@@ -111,8 +141,7 @@ class Charge():
         # 启动时间startTime、停止时间endTime、充电费用cost、服务费用0.8*curCap、
         # 总费用 ；
 
-        Order.createOrederDetail(completeOrder.id, self.id, self.curCap,
-                                 self.time, self.startTime, self.endTime, self.cost,self.mode)
+        
 
     def pushQue(self, order):
         print("订单",order.id,"进入桩子",self.id)

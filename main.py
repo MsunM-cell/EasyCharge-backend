@@ -58,7 +58,7 @@ def userLogin():
         if(encryption.getMd5(password) == myPass):
             ecbObj = encryption.ECBCipher()
             id = database.getUserByName(username)
-            token = ecbObj.encrypted(str(id)+str(int(mytime.mytime())+86400))
+            token = ecbObj.encrypted(str(id)+str(int(mytime.mytime())+86400*2))
             if(token == None):
                 data = {
                     "code": -2,
@@ -815,10 +815,73 @@ def closeChargePoint():
 @app.route('/getTime', methods=['GET'])
 def getTime():
     data = {
-        "time":mytime.mytime()
+        "time":mytime.startTime
     }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/getPointInfo', methods=['GET'])
+def getPointInfo():
+    token = request.args.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(mytime.mytime())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            result=charging.getAllInfo()
+            if(result!=None):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                    "data":result
+                }
+            else:
+                data = {
+                    "code": -3,
+                    "msg": "信息获取失败"
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/getWait', methods=['GET'])
+def getWait():
+    token = request.args.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(mytime.mytime())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            result=wait.getAllWaitInfo()
+            if(result!=None):
+                data = {
+                    "code": 200,
+                    "msg": "",
+                    "data":result
+                }
+            else:
+                data = {
+                    "code": -3,
+                    "msg": "信息获取失败"
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0',debug=True)  # 运行app

@@ -14,7 +14,3 @@ def mystrftime(str):
 def mylocaltime():
     return time.localtime(mytime())
 
-
-
-
-

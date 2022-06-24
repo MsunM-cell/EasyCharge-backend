@@ -305,6 +305,18 @@ class chargeArea(object):
             List.append(i.dict())
         return List
 
+    def getAllInfo(self):
+        resultDict = {}
+        for i in self.fastChargeList:
+            resultDict[i.id]=i.getInfo()
+        for i in self.tardyChargeList:
+            resultDict[i.id]=i.getInfo()
+        for i in self.badfastChargeList:
+            resultDict[i.id]=i.getInfo()
+        for i in self.badtardyChargeList:
+            resultDict[i.id]=i.getInfo()
+        return resultDict
+
     def getBadChargeById(self, id):
         for i in self.badfastChargeList:
             if(i.id == id):

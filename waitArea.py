@@ -98,6 +98,22 @@ class waitingArea(object):
                 return True
         return False
         
-
+    def getAllWaitInfo(self):
+        list=[]
+        for i in self.fastQue.array:
+            car={
+                "orderid":i.id,
+                "mode":i.mode,
+                "capacity":i.capacity
+            }
+            list.append(car)
+        for i in self.tardyQue.array:
+            car={
+                "orderid":i.id,
+                "mode":i.mode,
+                "capacity":i.capacity
+            }
+            list.append(car)
+        return list
 
 
