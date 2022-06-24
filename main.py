@@ -883,6 +883,30 @@ def getWait():
     return response, 200, {"Content-Type": "application/json"}
 
 
+@app.route('/user/getOrder', methods=['GET'])
+def usergetOrder():
+    token = request.args.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(mytime.mytime())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            data = {
+                "code": 200,
+                "msg": "",
+                "orderid": database.getOrderingByUser(id)
+            }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0',debug=True)  # 运行app
 

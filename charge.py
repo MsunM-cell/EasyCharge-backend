@@ -119,7 +119,7 @@ class Charge():
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量
             self.curCap = self.time/3600.0*self.power  # 充电量
             self.cost = self.cost+ 10/3600.0*self.power*self.price  # 充电费用
-            if(self.curCap >= int(self.getFirst().capacity)):
+            if(self.curCap >= float(self.getFirst().capacity)):
                 break
         if(self.usable==False):
             completeOrder = self.getFirst()
