@@ -3,6 +3,7 @@ import charge
 import threading
 import time
 import mytime
+import database
 
 
 class chargeArea(object):
@@ -338,6 +339,7 @@ class chargeArea(object):
             for temp in order:
                 dict={
                 "id": temp.userid,
+                "name":database.getUserNameById(temp.userid),
                 "carElecTotal": temp.totalCapacity,
                 "carElecRequest": temp.capacity,
                 "carWaitTime": int(mytime.mytime()- time.mktime(time.strptime(temp.createTime, '%Y-%m-%d %H:%M:%S')))

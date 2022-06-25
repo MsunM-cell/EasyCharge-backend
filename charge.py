@@ -3,7 +3,7 @@ import Order
 import threading
 import time
 import mytime
-
+import database
 
 class Charge():
     waitnum=3   #排队数量
@@ -19,7 +19,7 @@ class Charge():
         if(mode == 0):
             self.power = 30
         else:
-            self.power = 7
+            self.power = 10
         self.usable = True  # 是否可用 false 故障
         self.useTimes = 0  # 累计充电次数
         self.chargeTime = 0  # 充电总时长
@@ -58,12 +58,14 @@ class Charge():
                 for temp in waitList:
                     dict={
                     "id": temp.id,
+                    "name":database.getUserNameById(temp.userid),
                     "carElecTotal": temp.totalCapacity,
                     "carElecRequest": temp.capacity
                     }
                     list.append(dict)
                 data = {
                         "orderid": order.id,
+                        "name":database.getUserNameById(order.userid),
                         "capacity": round(self.curCap,2),
                         "cost":round(self.cost,2),
                         "wait":list

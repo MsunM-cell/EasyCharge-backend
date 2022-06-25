@@ -1,4 +1,5 @@
 import Queue
+import database
 
 
 class waitingArea(object):
@@ -103,6 +104,7 @@ class waitingArea(object):
         for i in self.fastQue.array:
             car={
                 "orderid":i.id,
+                "name":database.getUserNameById(i.userid),
                 "mode":i.mode,
                 "capacity":i.capacity
             }
@@ -110,6 +112,7 @@ class waitingArea(object):
         for i in self.tardyQue.array:
             car={
                 "orderid":i.id,
+                "name":database.getUserNameById(i.userid),
                 "mode":i.mode,
                 "capacity":i.capacity
             }

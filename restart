@@ -1,0 +1,2 @@
+ps -e | awk '/python3/{printf($1)}' | xargs kill -9 2>/dev/null
+/bin/python3 /home/byr/backend/EasyCharge-backend/main.py

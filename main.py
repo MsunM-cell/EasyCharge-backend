@@ -480,6 +480,7 @@ def cancleOrder(id):
             }
         else:
             order=charging.cancel(int(id))
+            print("取消"+database.getUserNameById(database.getOrderById(int(id)).userid))
             if(order == None):  
                 data = {
                     "code": -1,
@@ -493,6 +494,41 @@ def cancleOrder(id):
                 }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
+
+@app.route('/orders/cancelbyToken', methods=['PUT'])
+def cancelbyToken():
+    token = request.json.get('token')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(mytime.mytime())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+
+            order=charging.cancel(database.getOrderingByUser(result['id']))
+
+            if(order == None):  
+                data = {
+                    "code": -1,
+                    "msg": "未查找到该订单信息"
+                }
+            else:
+                data = {
+                    "code": 200,
+                    "msg": "",
+                    "order":order
+                }
+            print(data)
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
 
 @app.route('/orders/pay/<int:id>', methods=['PUT'])
 def putPay(id):
@@ -902,7 +938,7 @@ def usergetOrder():
             data = {
                 "code": 200,
                 "msg": "",
-                "orderid": database.getOrderingByUser(id)
+                "orderid": database.getOrderingByUser(result['id'])
             }
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}

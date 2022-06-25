@@ -245,6 +245,15 @@ def getUserPassById(tmp_id):
     finally:
         session.close()
 
+def getUserNameById(tmp_id):
+    try:
+        session = DBSession()
+        tmp = session.query(User).filter_by(id=tmp_id).first()
+        if not tmp:
+            return None
+        return tmp.username
+    finally:
+        session.close()
 
 def getAdminPassById(adminid):
     try:
