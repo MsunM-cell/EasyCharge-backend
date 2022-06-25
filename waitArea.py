@@ -4,13 +4,12 @@ import database
 
 class waitingArea(object):
     totalNum=10
-    curNum=0
     def __init__(self):
         self.fastQue = Queue.Queue(maxsize=waitingArea.totalNum)
         self.tardyQue = Queue.Queue(maxsize=waitingArea.totalNum)
 
     def haveEmpty(self):
-        if(waitingArea.curNum<waitingArea.totalNum):
+        if(self.fastQue.length()+self.tardyQue.length()<waitingArea.totalNum):
             return True
         else:
             return False

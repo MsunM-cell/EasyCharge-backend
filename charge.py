@@ -89,11 +89,12 @@ class Charge():
     def popWait(self):
         result=[]
         if(not self.que.isEmpty()):
-            for temp in range(len(self.que.array)):
-                if(temp==0):
+            for index,temp in enumerate(self.que.array):
+                if(index==0):
                     continue
                 else:
-                    order=self.que.array.pop(temp)
+                    print(self.id,index)
+                    order=self.que.array.pop(index)
                     result.append(order)
             return result
         return []
@@ -116,14 +117,17 @@ class Charge():
     def billing(self):
         while(self.using and self.usable and self.isOpen):
             time.sleep(1)  # 测试时可以6秒模拟现实中的一分钟
-            self.time += 10
-            self.chargeTime += 10  # 总时长
+            bilichi=60
+            self.time += bilichi
+            self.chargeTime += bilichi  # 总时长
             self.chargeCap = self.chargeTime/3600.0*self.power  # 总电量
             self.curCap = self.time/3600.0*self.power  # 充电量
-            self.cost = self.cost+ 10/3600.0*self.power*self.price  # 充电费用
+            self.cost = self.cost+ bilichi/3600.0*self.power*self.price  # 充电费用
             if(self.curCap >= float(self.getFirst().capacity)):
                 break
         if(self.usable==False):
+            self.using = False
+            self.endTime = mytime.mystrftime('%Y-%m-%d %H:%M:%S')
             completeOrder = self.getFirst()
             completeOrder.setStatus(1)
             Order.createOrederDetail(completeOrder.id, self.id, self.curCap,

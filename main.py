@@ -432,6 +432,38 @@ def putCapacity(id):
     response = json.dumps(data)
     return response, 200, {"Content-Type": "application/json"}
 
+@app.route('/orders/capacityByToken', methods=['PUT'])
+def capacityByToken():
+    token = request.json.get('token')
+    capacity=request.json.get('capacity')
+    result = encryption.tokenDecode(token)
+    if(result == None):
+        data = {
+            "code": -1,
+            "msg": "登录信息有误，请退出账号重新登录"
+        }
+    else:
+        if(result['time'] < int(mytime.mytime())):
+            data = {
+                "code": -2,
+                "msg": "登录信息已失效，请退出账号重新登录"
+            }
+        else:
+            flag=wait.setCapacity(database.getOrderingByUser(result['id']),capacity)
+            if(flag == None):  
+                data = {
+                    "code": -1,
+                    "msg": "未查找到该订单信息"
+                }
+            else:
+                data = {
+                    "code": 200,
+                    "msg": "",
+                }
+    response = json.dumps(data)
+    return response, 200, {"Content-Type": "application/json"}
+
+
 @app.route('/orders', methods=['GET'])
 def getorders():
     token = request.args.get('token')

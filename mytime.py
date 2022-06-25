@@ -5,7 +5,7 @@ timestamp=1655329800
 startTime=int(time.time())
 
 def mytime(): #time()
-    return (int(time.time())-startTime)*10+timestamp
+    return (int(time.time())-startTime)*60+timestamp
 
 def mystrftime(str):
     return time.strftime(str,time.localtime(mytime()))

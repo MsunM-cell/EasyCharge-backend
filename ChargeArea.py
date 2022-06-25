@@ -1,4 +1,3 @@
-from sqlalchemy import false, true
 import charge
 import threading
 import time
@@ -274,6 +273,16 @@ class chargeArea(object):
         return None
 
     def cancel(self, id):
+        for index,temp in enumerate(self.waitArea.fastQue.array):
+            if(temp.id==id):
+                order=self.waitArea.fastQue.array.pop(index)
+                order.setStatus(5)
+                return order.json()
+        for index,temp in enumerate(self.waitArea.tardyQue.array):
+            if(temp.id==id):
+                order=self.waitArea.tardyQue.array.pop(index)
+                order.setStatus(5)
+                return order.json()
         for i in self.fastChargeList:
             order = i.getFirst()
             if( order!= None and order.id == id):
@@ -282,7 +291,7 @@ class chargeArea(object):
             else:
                 for index,temp in enumerate(i.getWait()):
                     if(temp!=None and temp.id==id):
-                        return i.cancelOrder(index).json()
+                        return i.cancelOrder(index+1).json()
         for i in self.tardyChargeList:
             order = i.getFirst()
             if(order != None and order.id == id):
@@ -291,7 +300,23 @@ class chargeArea(object):
             else:
                 for index,temp in enumerate(i.getWait()):
                     if(temp!=None and temp.id==id):
-                        return i.cancelOrder(index).json()
+                        return i.cancelOrder(index+1).json()
+        for i in self.badtardyChargeList:
+            order = i.getFirst()
+            if(order != None and order.id == id):
+                return i.cancelOrder(0).json()
+            else:
+                for index,temp in enumerate(i.getWait()):
+                    if(temp!=None and temp.id==id):
+                        return i.cancelOrder(index+1).json()
+        for i in self.badfastChargeList:
+            order = i.getFirst()
+            if(order != None and order.id == id):
+                return i.cancelOrder(0).json()
+            else:
+                for index,temp in enumerate(i.getWait()):
+                    if(temp!=None and temp.id==id):
+                        return i.cancelOrder(index+1).json()
         return None
 
     def getAllPoints(self):
